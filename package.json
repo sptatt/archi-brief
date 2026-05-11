@@ -1,0 +1,16 @@
+{
+  "name": "archi-brief",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "resend": "^4.0.0",
+    "rss-parser": "^3.13.0"
+  },
+  "engines": { "node": ">=20" }
+}

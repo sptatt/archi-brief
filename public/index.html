@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCHI — Daily Brief</title>
+<style>
+  :root{--paper:#FBF8F0;--ink:#0A0A0A;--muted:#5A554E;--faint:#9F9A91;--hair:#D8D2C2;--card:#fff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Pretendard',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.6;background-image:radial-gradient(circle,#ECE7D7 0.8px,transparent 1.2px);background-size:24px 24px}
+  .wrap{max-width:480px;margin:0 auto;padding:48px 20px}
+  .card{background:#fff;border:1px solid var(--hair);border-radius:6px;padding:32px;position:relative}
+  .card::before{content:'';position:absolute;inset:-5px;pointer-events:none;background:linear-gradient(#0A0A0A,#0A0A0A) top left/10px 1px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) top left/1px 10px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) top right/10px 1px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) top right/1px 10px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) bottom left/10px 1px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) bottom left/1px 10px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) bottom right/10px 1px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) bottom right/1px 10px no-repeat}
+  .brand{text-align:center;font-weight:700;letter-spacing:0.22em;font-size:12px;margin-bottom:24px}
+  h2{font-size:22px;font-weight:600;letter-spacing:-0.02em;margin-bottom:6px}
+  .sub{font-size:12.5px;color:var(--faint);margin-bottom:22px}
+  label{display:block;font-size:10px;font-weight:600;font-family:ui-monospace,monospace;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;margin-top:12px}
+  input[type=email],input[type=password],input[type=text]{width:100%;height:42px;padding:0 14px;border:1px solid var(--hair);border-radius:3px;background:#fff;font-size:13.5px}
+  input:focus{outline:none;border-color:var(--ink)}
+  input[type=time]{font-family:ui-monospace,monospace;font-size:13px;padding:6px 10px;border:1px solid var(--hair);border-radius:3px;accent-color:var(--ink);color-scheme:light}
+  button.btn{width:100%;height:44px;border:0;border-radius:4px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-top:18px}
+  button.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--hair);height:36px;font-size:12px;width:auto;padding:0 14px;margin-top:0}
+  button.btn:disabled{opacity:0.5;cursor:not-allowed}
+  .links{margin-top:18px;padding-top:18px;border-top:1px solid #E8E3D5;display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+  .links a{cursor:pointer;color:var(--ink);border-bottom:1px solid transparent}
+  .links a:hover{border-bottom-color:var(--ink)}
+  .err{color:#9B2C2C;font-size:12px;margin-top:10px}
+  .ok{color:#2C7A2C;font-size:12px;margin-top:10px}
+  .cat-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--hair);border-radius:4px;background:#fff;margin-top:14px}
+  .cat{padding:14px;border-bottom:1px solid var(--hair);cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px}
+  .cat:nth-child(odd){border-right:1px solid var(--hair)}
+  .cat:nth-last-child(-n+2){border-bottom:none}
+  .cat:hover{background:#FAF7EE}
+  .cat.on{background:#FAF7EE}
+  .box{width:16px;height:16px;border:1.2px solid #BCB6A6;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cat.on .box{background:var(--ink);border-color:var(--ink);color:#fff;font-size:11px}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid #E8E3D5}
+  .row:first-child{border-top:none}
+  .row .lbl{font-size:13px;font-weight:500}
+  .row .desc{font-size:11.5px;color:var(--faint)}
+  .toggle{width:38px;height:22px;background:#D8D2C2;border-radius:999px;position:relative;cursor:pointer}
+  .toggle::after{content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left .15s}
+  .toggle.on{background:var(--ink)}.toggle.on::after{left:19px}
+  .muted{color:var(--muted)}
+  .mono{font-family:ui-monospace,monospace}
+  .topbar{padding:14px 20px;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center;max-width:600px;margin:0 auto}
+  .topbar .brand-min{font-weight:700;letter-spacing:0.22em;font-size:12px}
+  .main{max-width:600px;margin:0 auto;padding:32px 20px}
+  .section{background:#fff;border:1px solid var(--hair);border-radius:4px;padding:20px;margin-bottom:16px}
+  .section h3{font-size:14px;font-weight:600;margin-bottom:6px}
+  .section p.note{font-size:11.5px;color:var(--faint)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- Supabase JS via CDN -->
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+/* ====== CONFIG (replace these with your own) ====== */
+const SUPABASE_URL = 'https://jiobzqvwcxhdgstcgeib.supabase.co';      // e.g. https://abcdefg.supabase.co
+const SUPABASE_ANON_KEY = 'sb_publishable_1cssRrsojhRfvpujHStJHg_qUTPfKpA';
+/* ================================================== */
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const CATEGORIES = [
+  { id:'design',  name:'건축가 · 작품' },
+  { id:'material',name:'건축 재료 · 자재' },
+  { id:'green',   name:'친환경 · 지속가능' },
+  { id:'safety',  name:'구조 · 소방 · 안전' },
+  { id:'policy',  name:'법규 · 정책' },
+  { id:'tech',    name:'건설 기술 · BIM' },
+  { id:'urban',   name:'도시계획 · 재생' },
+  { id:'edu',     name:'공모전 · 학술' },
+];
+
+const app = document.getElementById('app');
+const h = (tag, attrs={}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)) {
+    if (k==='class') n.className = v;
+    else if (k==='html') n.innerHTML = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2).toLowerCase(), v);
+    else n.setAttribute(k, v);
+  }
+  for (const c of kids) {
+    if (c==null) continue;
+    n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  }
+  return n;
+};
+
+let state = { user:null, profile:null, view:'login', msg:'' };
+
+async function refresh() {
+  const { data: { user } } = await supabase.auth.getUser();
+  state.user = user || null;
+  if (user) {
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    state.profile = profile;
+    state.view = (profile?.categories?.length ? 'main' : 'cats');
+  } else {
+    state.view = state.view==='signup' ? 'signup' : 'login';
+  }
+  render();
+}
+
+supabase.auth.onAuthStateChange(() => { refresh(); });
+
+function render() {
+  app.innerHTML = '';
+  if (!state.user) {
+    app.appendChild(state.view==='signup' ? viewSignup() : viewLogin());
+  } else if (state.view === 'cats') {
+    app.appendChild(viewCats());
+  } else {
+    app.appendChild(viewMain());
+  }
+}
+
+function viewLogin() {
+  const wrap = h('div',{class:'wrap'});
+  const card = h('div',{class:'card'});
+  card.appendChild(h('div',{class:'brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(h('h2',{},'로그인'));
+  card.appendChild(h('div',{class:'sub'},'가입한 이메일과 비밀번호를 입력하세요.'));
+
+  const email = h('input',{type:'email',autocomplete:'email',placeholder:'you@example.com'});
+  const pw    = h('input',{type:'password',autocomplete:'current-password',placeholder:'••••••••'});
+  const msg   = h('div',{class:'err'});
+
+  card.appendChild(h('label',{},'EMAIL')); card.appendChild(email);
+  card.appendChild(h('label',{},'PASSWORD')); card.appendChild(pw);
+  card.appendChild(msg);
+  card.appendChild(h('button',{class:'btn', onclick: async ()=>{
+    msg.textContent='';
+    const { error } = await supabase.auth.signInWithPassword({ email: email.value.trim(), password: pw.value });
+    if (error) msg.textContent = error.message;
+    else refresh();
+  }}, '로그인'));
+
+  card.appendChild(h('div',{class:'links'},
+    h('a',{onclick:()=>{state.view='signup';render();}},'회원가입'),
+    h('a',{onclick: async ()=>{
+      const e = prompt('가입한 이메일을 입력하세요');
+      if (!e) return;
+      const { error } = await supabase.auth.resetPasswordForEmail(e, { redirectTo: location.origin });
+      alert(error ? error.message : '비밀번호 재설정 메일을 보냈습니다');
+    }},'비밀번호 찾기')
+  ));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+function viewSignup() {
+  const wrap = h('div',{class:'wrap'});
+  const card = h('div',{class:'card'});
+  card.appendChild(h('div',{class:'brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(h('h2',{},'회원가입'));
+  card.appendChild(h('div',{class:'sub'},'이메일·비밀번호로 계정을 만듭니다. 가입 후 인증 메일을 보내드립니다.'));
+
+  const name  = h('input',{type:'text',placeholder:'이름 또는 닉네임'});
+  const email = h('input',{type:'email',autocomplete:'email',placeholder:'you@example.com'});
+  const pw    = h('input',{type:'password',autocomplete:'new-password',placeholder:'8자 이상'});
+  const msg   = h('div',{class:'err'});
+
+  card.appendChild(h('label',{},'NAME')); card.appendChild(name);
+  card.appendChild(h('label',{},'EMAIL')); card.appendChild(email);
+  card.appendChild(h('label',{},'PASSWORD')); card.appendChild(pw);
+  card.appendChild(msg);
+  card.appendChild(h('button',{class:'btn', onclick: async ()=>{
+    msg.textContent='';
+    if (pw.value.length < 8) { msg.textContent='비밀번호는 8자 이상'; return; }
+    const { error } = await supabase.auth.signUp({
+      email: email.value.trim(),
+      password: pw.value,
+      options: { data: { name: name.value.trim() }, emailRedirectTo: location.origin }
+    });
+    if (error) msg.textContent = error.message;
+    else { msg.className='ok'; msg.textContent = '인증 메일을 보냈어요. 받은 편지함에서 링크를 클릭하세요.'; }
+  }}, '가입하기'));
+
+  card.appendChild(h('div',{class:'links'},
+    h('span',{class:'muted'},'이미 계정 있음?'),
+    h('a',{onclick:()=>{state.view='login';render();}},'로그인')
+  ));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+function viewCats() {
+  const wrap = h('div',{class:'wrap'});
+  const card = h('div',{class:'card'});
+  card.appendChild(h('div',{class:'brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(h('h2',{},`환영합니다, ${state.profile?.name || ''}님`));
+  card.appendChild(h('div',{class:'sub'},'관심 분야를 골라주세요. 설정에서 언제든 변경할 수 있어요.'));
+
+  const sel = new Set(state.profile?.categories || []);
+  const grid = h('div',{class:'cat-grid'});
+  CATEGORIES.forEach(c => {
+    const item = h('div',{class:'cat'+(sel.has(c.id)?' on':''), onclick: ()=>{
+      if (sel.has(c.id)) { sel.delete(c.id); item.classList.remove('on'); }
+      else { sel.add(c.id); item.classList.add('on'); }
+    }},
+      h('div',{class:'box'},'✓'),
+      h('div',{},c.name)
+    );
+    grid.appendChild(item);
+  });
+  card.appendChild(grid);
+  const msg = h('div',{class:'err'});
+  card.appendChild(msg);
+  card.appendChild(h('button',{class:'btn', onclick: async ()=>{
+    if (sel.size === 0) { msg.textContent='1개 이상 선택'; return; }
+    const { error } = await supabase.from('profiles').update({ categories: [...sel] }).eq('id', state.user.id);
+    if (error) msg.textContent = error.message;
+    else refresh();
+  }}, '시작하기'));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+function viewMain() {
+  const wrap = h('div',{});
+  wrap.appendChild(h('div',{class:'topbar'},
+    h('div',{class:'brand-min'},'ARCHI'),
+    h('button',{class:'btn ghost', onclick: async ()=>{ await supabase.auth.signOut(); refresh(); }},'로그아웃')
+  ));
+  const main = h('div',{class:'main'});
+
+  // Account section
+  const acc = h('div',{class:'section'},
+    h('h3',{},'계정'),
+    h('p',{class:'note mono'}, state.user.email)
+  );
+  main.appendChild(acc);
+
+  // Categories
+  const sel = new Set(state.profile.categories || []);
+  const catSec = h('div',{class:'section'},
+    h('h3',{},'구독 분야')
+  );
+  const grid = h('div',{class:'cat-grid'});
+  CATEGORIES.forEach(c => {
+    const item = h('div',{class:'cat'+(sel.has(c.id)?' on':''), onclick: async ()=>{
+      if (sel.has(c.id)) sel.delete(c.id); else sel.add(c.id);
+      item.classList.toggle('on');
+      await supabase.from('profiles').update({ categories: [...sel] }).eq('id', state.user.id);
+    }}, h('div',{class:'box'},'✓'), h('div',{},c.name));
+    grid.appendChild(item);
+  });
+  catSec.appendChild(grid);
+  main.appendChild(catSec);
+
+  // Times
+  const t1 = h('input',{type:'time', value: state.profile.send_morning?.slice(0,5) || '09:00'});
+  const t2 = h('input',{type:'time', value: state.profile.send_evening?.slice(0,5) || '18:00'});
+  t1.addEventListener('change', async () => {
+    await supabase.from('profiles').update({ send_morning: t1.value+':00' }).eq('id', state.user.id);
+  });
+  t2.addEventListener('change', async () => {
+    await supabase.from('profiles').update({ send_evening: t2.value+':00' }).eq('id', state.user.id);
+  });
+  main.appendChild(h('div',{class:'section'},
+    h('h3',{},'발송 시간 (참고용 — 실제 크론은 Vercel 설정 시간 사용)'),
+    h('div',{class:'row'},
+      h('div',{},h('div',{class:'lbl'},'오전 — 국내'),h('div',{class:'desc'},'기본 09:00')),
+      t1
+    ),
+    h('div',{class:'row'},
+      h('div',{},h('div',{class:'lbl'},'오후 — 해외'),h('div',{class:'desc'},'기본 18:00')),
+      t2
+    )
+  ));
+
+  // Pause toggle
+  const tog = h('div',{class:'toggle'+(state.profile.paused?' on':'')});
+  tog.addEventListener('click', async () => {
+    const newVal = !state.profile.paused;
+    state.profile.paused = newVal;
+    tog.classList.toggle('on');
+    await supabase.from('profiles').update({ paused: newVal }).eq('id', state.user.id);
+  });
+  main.appendChild(h('div',{class:'section'},
+    h('div',{class:'row'},
+      h('div',{},h('div',{class:'lbl'},'구독 일시정지'),h('div',{class:'desc'},'켜면 메일 발송이 멈춥니다')),
+      tog
+    )
+  ));
+
+  wrap.appendChild(main);
+  return wrap;
+}
+
+refresh();
+</script>
+</body>
+</html>
