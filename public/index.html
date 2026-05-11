@@ -27,7 +27,7 @@
     --hair:#E2DDCD;            /* hairline rule */
     --hair-soft:#E8E3D5;
     --grid:#F2EDDC;            /* dot grid */
-    --tag-bg:#F5F2EA;
+    --tag-bg:#EFEBDF;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -563,7 +563,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 /* ====== CONFIG: replace these two with your Supabase values ====== */
 const SUPABASE_URL = 'https://jiobzqvwcxhdgstcgeib.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_1cssRrsojhRfvpujHStJHg_qUTPfKpA';
+const SUPABASE_ANON_KEY = 're_Y5PS33rR_G9aSmFaetgNEXWqrjLVYNhye';
 /* ================================================================= */
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -650,6 +650,12 @@ async function hydrateFromSupabase(){
     time: new Date(d.sent_at).toTimeString().slice(0,5),
     items: d.items || [],
   }));
+  // Latest news for home view
+  const { data: krNews } = await supabase.from('news_items').select('*').eq('region','kr').order('published_at',{ascending:false}).limit(80);
+  const { data: intNews } = await supabase.from('news_items').select('*').eq('region','int').order('published_at',{ascending:false}).limit(80);
+  state.todayKr = krNews || [];
+  state.todayInt = intNews || [];
+
   if (!state.user.categories.length) state.view = 'select-cats';
   else if (state.view === 'login' || state.view === 'signup' || state.view === 'verify') state.view = 'home';
   render();
@@ -685,6 +691,7 @@ function el(tag, attrs={}, ...children){
   return n;
 }
 function catName(id){ const c = CATEGORIES.find(x=>x.id===id); return c?c.name:id; }
+function itemCat(it){ return it.category || it.cat; }
 function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(window.__t); window.__t = setTimeout(()=>t.classList.remove('show'), 1800);
@@ -812,8 +819,12 @@ function viewHome(){
 
   const grid = el('div',{class:'digest-grid'});
   const seed = today.getFullYear()*10000 + (today.getMonth()+1)*100 + today.getDate();
-  const krItems = pickItems(categoryFiltered(SAMPLE_KR), seed+1);
-  const intItems = pickItems(categoryFiltered(SAMPLE_INT), seed+2);
+  const cats = state.user.categories || [];
+  const filterByCat = arr => arr.filter(n => !cats.length || cats.includes(n.category || n.cat));
+  let krItems = filterByCat(state.todayKr || []).slice(0, 5);
+  if (!krItems.length) krItems = pickItems(categoryFiltered(SAMPLE_KR), seed+1);
+  let intItems = filterByCat(state.todayInt || []).slice(0, 5);
+  if (!intItems.length) intItems = pickItems(categoryFiltered(SAMPLE_INT), seed+2);
 
   grid.appendChild(makeDigestCard({region:'국내',regionLabel:'KOREA',time:'09:00',title:'국내 건축 소식',items:krItems,date:today,slot:'kr',dtl:'01'}));
   grid.appendChild(makeDigestCard({region:'해외',regionLabel:'GLOBAL',time:'18:00',title:'Global Architecture',items:intItems,date:today,slot:'int',dtl:'02'}));
@@ -839,36 +850,22 @@ function makeNowBar(){
 
 async function sendNow(){
   if (!state.user) { toast('로그인이 필요합니다'); return; }
-  if ((state.user.categories||[]).length === 0) {
-    toast('구독 분야를 1개 이상 선택해주세요'); return;
-  }
+  if ((state.user.categories||[]).length === 0) { toast('구독 분야를 1개 이상 선택해주세요'); return; }
   toast('발송 중...');
   try {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { toast('세션 만료. 다시 로그인해주세요'); return; }
+    if (!session) { toast('세션 만료. 다시 로그인'); return; }
     const r = await fetch('/api/digest-now', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + session.access_token }
     });
     const j = await r.json();
     if (j.ok && j.sent > 0) {
-      toast('메일이 발송됐어요. 받은편지함 확인하세요.');
-      const { data: digests } = await supabase.from('digests').select('*').order('sent_at', { ascending:false }).limit(60);
-      state.archive = (digests||[]).map(d => ({
-        date: new Date(d.sent_at),
-        region: d.region || (d.slot === 'morning' ? 'kr' : d.slot === 'evening' ? 'int' : 'now'),
-        time: new Date(d.sent_at).toTimeString().slice(0,5),
-        items: d.items || [],
-      }));
-      render();
-    } else if (j.ok && j.sent === 0) {
-      toast('아직 선택 분야의 새 기사가 없어요');
-    } else {
-      toast(j.error || '발송 실패');
-    }
-  } catch (e) {
-    toast('발송 실패: ' + e.message);
-  }
+      toast('메일이 발송됐어요. 받은편지함 확인.');
+      await hydrateFromSupabase();
+    } else if (j.ok && j.sent === 0) toast('아직 선택 분야의 새 기사가 없어요');
+    else toast(j.error || '발송 실패');
+  } catch (e) { toast('발송 실패: ' + e.message); }
 }
 
 function makeDigestCard({region,regionLabel,time,title,items,date,slot,dtl}){
@@ -892,9 +889,9 @@ function makeDigestCard({region,regionLabel,time,title,items,date,slot,dtl}){
         el('div',{class:'news-content'},
           el('div',{class:'news-headline'}, it.title),
           el('div',{class:'news-meta'},
-            el('span',{class:'tag'}, catName(it.cat)),
+            el('span',{class:'tag'}, catName(itemCat(it))),
             el('span',{class:'dot'}),
-            el('span',{}, it.src)
+            el('span',{}, it.source || it.src)
           )
         )
       ));
@@ -947,8 +944,14 @@ function openMail({region,regionLabel,time,date,slot,items}){
       el('div',{class:'mail-news-title'}, it.title),
       el('div',{class:'mail-news-excerpt'}, it.excerpt),
       el('div',{class:'mail-news-foot'},
-        el('span',{}, `${catName(it.cat)} · ${it.src}`),
-        el('a',{class:'mail-news-link', href: it.url || '#', target:'_blank', rel:'noopener noreferrer'}, 'READ →')
+        el('span',{}, `${catName(itemCat(it))} · ${it.source || it.src || ''}`),
+        el('a',{
+        class:'mail-news-link',
+        href: it.url || '#',
+        target: '_blank',
+        rel: 'noopener noreferrer',
+        onclick: (e)=>{ if (!it.url) { e.preventDefault(); toast('데모 데이터 — 원문 링크 없음'); } }
+      }, it.url ? 'READ →' : 'DEMO')
       )
     ));
   });
