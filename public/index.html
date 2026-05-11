@@ -837,16 +837,38 @@ function makeNowBar(){
   );
 }
 
-function sendNow(){
-  const pool = [...categoryFiltered(SAMPLE_KR), ...categoryFiltered(SAMPLE_INT)];
-  if(pool.length===0){ toast('구독 분야를 1개 이상 선택해주세요'); return; }
-  const items = pickItems(pool, Date.now()%100000);
-  const now = new Date();
-  const digest = { date: now, region:'now', time: fmtTime(now), items };
-  state.archive = [digest, ...state.archive];
-  saveState();
-  openMail({region:'온디맨드',regionLabel:'ON-DEMAND',time:digest.time,date:now,slot:'now',items});
-  toast('새 브리프가 발송되었어요');
+async function sendNow(){
+  if (!state.user) { toast('로그인이 필요합니다'); return; }
+  if ((state.user.categories||[]).length === 0) {
+    toast('구독 분야를 1개 이상 선택해주세요'); return;
+  }
+  toast('발송 중...');
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { toast('세션 만료. 다시 로그인해주세요'); return; }
+    const r = await fetch('/api/digest-now', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + session.access_token }
+    });
+    const j = await r.json();
+    if (j.ok && j.sent > 0) {
+      toast('메일이 발송됐어요. 받은편지함 확인하세요.');
+      const { data: digests } = await supabase.from('digests').select('*').order('sent_at', { ascending:false }).limit(60);
+      state.archive = (digests||[]).map(d => ({
+        date: new Date(d.sent_at),
+        region: d.region || (d.slot === 'morning' ? 'kr' : d.slot === 'evening' ? 'int' : 'now'),
+        time: new Date(d.sent_at).toTimeString().slice(0,5),
+        items: d.items || [],
+      }));
+      render();
+    } else if (j.ok && j.sent === 0) {
+      toast('아직 선택 분야의 새 기사가 없어요');
+    } else {
+      toast(j.error || '발송 실패');
+    }
+  } catch (e) {
+    toast('발송 실패: ' + e.message);
+  }
 }
 
 function makeDigestCard({region,regionLabel,time,title,items,date,slot,dtl}){
