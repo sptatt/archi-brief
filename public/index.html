@@ -882,9 +882,9 @@ async function sendNow(slot){
     const j = await r.json();
     if (j.ok && j.sent > 0) {
       const tag = (j.kr !== undefined) ? ` (국내 ${j.kr}, 해외 ${j.int})` : '';
-      toast('메일 발송됐어요' + tag);
+      toast('메일 발송되었습니다' + tag);
       await hydrateFromSupabase();
-    } else if (j.ok && j.sent === 0) toast('해당 분야의 새 기사가 없어요');
+    } else if (j.ok && j.sent === 0) toast('해당 분야의 새 기사가 없습니다');
     else toast(j.error || '발송 실패');
   } catch (e) { toast('발송 실패: ' + e.message); }
 }
@@ -901,7 +901,7 @@ function makeDigestCard({region,regionLabel,time,title,items,date,slot,dtl}){
     el('div',{class:'digest-title'}, title)
   ));
   if(items.length===0){
-    card.appendChild(el('div',{style:'padding:32px 22px;text-align:center;color:var(--faint);font-size:12.5px'}, '선택하신 분야의 오늘 소식이 없어요.'));
+    card.appendChild(el('div',{style:'padding:32px 22px;text-align:center;color:var(--faint);font-size:12.5px'}, '선택하신 분야의 오늘 소식이 없습니다.'));
   }else{
     const ul = el('ul',{class:'news-list'});
     items.forEach((it,idx)=>{
@@ -1005,8 +1005,8 @@ function viewArchive(){
 
   if(state.archive.length===0){
     wrap.appendChild(el('div',{class:'empty'},
-      el('div',{class:'h3'}, '아직 받은 브리프가 없어요'),
-      el('p',{}, '발송된 메일이 여기에 자동으로 쌓입니다.', el('br',{}),'지금 바로 받아보거나, 디자인 미리보기용 샘플을 채워볼 수 있어요.'),
+      el('div',{class:'h3'}, '아직 받은 브리프가 없습니다'),
+      el('p',{}, '발송된 메일이 여기에 자동으로 쌓입니다.', el('br',{}),'지금 바로 받아보거나, 디자인 미리보기용 샘플을 채워볼 수 있습니다.'),
       el('div',{class:'actions'},
         el('button',{class:'btn btn-sm', onclick:sendNow}, '+ 지금 받기'),
         el('button',{class:'btn btn-sm btn-ghost', onclick:fillSample}, '샘플 14일 채우기')
@@ -1023,7 +1023,7 @@ function viewArchive(){
       return i;
     })(),
     el('button',{class:'btn-sm btn-ghost btn', onclick:()=>{
-      if(confirm('아카이브를 전부 비우시겠어요?')){ state.archive=[]; saveState(); render(); toast('아카이브를 비웠어요'); }
+      if(confirm('아카이브를 전부 비우시겠습니까?')){ state.archive=[]; saveState(); render(); toast('아카이브를 비웠습니다'); }
     }}, '비우기')
   );
   wrap.appendChild(tools);
@@ -1056,7 +1056,7 @@ function viewArchive(){
     }).filter(d=>d.items.length>0);
 
     if(filtered.length===0){
-      listWrap.appendChild(el('div',{class:'empty'}, el('p',{},'조건에 맞는 브리프가 없어요.')));
+      listWrap.appendChild(el('div',{class:'empty'}, el('p',{},'조건에 맞는 브리프가 없습니다.')));
       return;
     }
     const monthCounts = {};
@@ -1110,7 +1110,7 @@ function fillSample(){
   }
   state.archive = [...out, ...state.archive];
   saveState(); render();
-  toast(`샘플 ${pad(out.length)}건이 채워졌어요`);
+  toast(`샘플 ${pad(out.length)}건이 채워졌습니다`);
 }
 
 function viewSettings(){
@@ -1141,7 +1141,7 @@ function viewSettings(){
       if(v && /^\S+@\S+\.\S+$/.test(v)){
         const { error } = await supabase.auth.updateUser({ email: v });
         if (error) toast(error.message || '변경 실패');
-        else toast('확인 메일을 보냈어요. 메일에서 확인하세요.');
+        else toast('확인 메일을 보냈습니다. 메일에서 확인하세요.');
       }
     }}, '변경')
   ));
@@ -1167,7 +1167,7 @@ function viewSettings(){
       const v = e.target.value;
       if(/^\d{2}:\d{2}$/.test(v)){
         state.user.times[key]=v; saveState();
-        toast(`${label} ${v}로 설정되었어요`);
+        toast(`${label} ${v}로 설정되었습니다`);
       }
     });
     return el('div',{class:'settings-row'},
@@ -1225,11 +1225,11 @@ function viewSettings(){
       el('div',{class:'settings-desc'}, '모든 구독 정보와 아카이브가 삭제됩니다')
     ),
     el('button',{class:'btn-sm btn-ghost btn', onclick:async ()=>{
-      if(confirm('정말 구독을 해지하시겠어요? 프로필과 아카이브가 삭제되고 로그아웃됩니다.')){
+      if(confirm('정말 구독을 해지하시겠습니까? 프로필과 아카이브가 삭제되고 로그아웃됩니다.')){
         if (state.user) await supabase.from('profiles').delete().eq('id', state.user.id);
         await supabase.auth.signOut();
         state.user = null; state.profile = null; state.archive = []; state.view = 'login';
-        render(); toast('구독이 해지되었어요');
+        render(); toast('구독이 해지되었습니다');
       }
     }}, '해지하기')
   ));
@@ -1334,13 +1334,13 @@ function viewSignup(){
     if(name.length<1){ toast('이름을 입력해주세요'); return; }
     if(!/^\S+@\S+\.\S+$/.test(email)){ toast('이메일 형식을 확인해주세요'); return; }
     if(pw.length<8){ toast('비밀번호는 8자 이상'); return; }
-    if(pw !== pw2){ toast('비밀번호가 일치하지 않아요'); return; }
+    if(pw !== pw2){ toast('비밀번호가 일치하지 않습니다'); return; }
     const { error } = await supabase.auth.signUp({
       email, password: pw,
       options: { data: { name }, emailRedirectTo: location.origin }
     });
     if (error) { toast(error.message || '가입 실패'); return; }
-    toast('인증 메일을 보냈어요. 메일함의 링크를 클릭하세요.');
+    toast('인증 메일을 보냈습니다. 메일함의 링크를 클릭하세요.');
   }});
 
   form.appendChild(el('div',{class:'field'}, el('label',{},'NAME'), nameIn));
@@ -1353,7 +1353,7 @@ function viewSignup(){
   card.appendChild(form);
 
   card.appendChild(el('div',{class:'auth-links'},
-    el('span',{class:'faint'},'이미 계정이 있나요?'),
+    el('span',{class:'faint'},'이미 계정이 있으십니까?'),
     el('a',{onclick:()=>{ state.view='login'; render(); }},'로그인')
   ));
   wrap.appendChild(card);
@@ -1377,7 +1377,7 @@ function viewVerify(){
     e.preventDefault();
     const code = codeIn.value.trim();
     const pv = state.pendingVerification;
-    if(!pv){ toast('인증 정보가 만료됐어요'); state.view='login'; render(); return; }
+    if(!pv){ toast('인증 정보가 만료되었습니다'); state.view='login'; render(); return; }
     if(code !== pv.code){ toast('인증 코드가 올바르지 않아요'); return; }
     state.accounts[pv.email] = {
       name: pv.name, password: pv.password,
@@ -1390,7 +1390,7 @@ function viewVerify(){
     state.archive = [];
     state.pendingVerification = null;
     state.view = 'select-cats';
-    saveState(); render(); toast('인증 완료 — 환영해요');
+    saveState(); render(); toast('인증 완료 — 환영합니다');
   }});
   form.appendChild(el('div',{class:'field'},
     el('label',{},'VERIFICATION CODE'),
@@ -1412,7 +1412,7 @@ function viewVerify(){
     el('a',{onclick:()=>{
       if(state.pendingVerification){
         state.pendingVerification.code = String(Math.floor(100000+Math.random()*900000));
-        render(); toast('새 인증 코드가 발급됐어요');
+        render(); toast('새 인증 코드가 발급되었습니다');
       }
     }},'코드 재발급')
   ));
@@ -1435,7 +1435,7 @@ function viewSelectCats(){
       `환영합니다, ${state.user.name || ''}님.`, el('br',{}),
       '관심 분야를 골라주세요.'
     ),
-    el('p',{class:'p-lead'},'선택한 분야의 소식만 큐레이션해서 보내드립니다. 설정에서 언제든 변경할 수 있어요.')
+    el('p',{class:'p-lead'},'선택한 분야의 소식만 큐레이션해서 보내드립니다. 설정에서 언제든 변경할 수 있습니다.')
   ));
 
   const grid = el('div',{class:'cat-grid'});
@@ -1493,7 +1493,7 @@ function viewFindId(){
       const j = await r.json();
       resultBox.style.display = 'block';
       if (j.found === 0) {
-        resultBox.appendChild(document.createTextNode('해당 이름으로 가입된 계정이 없어요.'));
+        resultBox.appendChild(document.createTextNode('해당 이름으로 가입된 계정이 없습니다.'));
       } else {
         resultBox.appendChild(el('div',{},
           el('strong',{},'찾은 계정 ' + j.found + '건:')
@@ -1544,7 +1544,7 @@ function viewFindPw(){
     });
     if (error) { toast(error.message || '전송 실패'); return; }
     note.style.display = 'block';
-    note.innerHTML = '<strong>' + email + '</strong> 로 재설정 링크를 보냈어요.<br>메일을 확인하고 <strong>링크를 클릭</strong>하면 새 비밀번호 입력 화면이 자동으로 떠요.<br><br>(코드 입력은 필요 없습니다 — 그냥 링크만 클릭)';
+    note.innerHTML = '<strong>' + email + '</strong> 로 재설정 링크를 보냈습니다.<br>메일을 확인하고 <strong>링크를 클릭</strong>하면 새 비밀번호 입력 화면이 자동으로 뜹니다.';
   }});
 
   form.appendChild(el('div',{class:'field'}, el('label',{},'EMAIL'), emailIn));
@@ -1574,11 +1574,11 @@ function viewResetPw(){
 
   const form = el('form',{onsubmit:async (e)=>{
     e.preventDefault();
-    if (pw1.value.length < 8) { toast('8자 이상이어야 해요'); return; }
-    if (pw1.value !== pw2.value) { toast('비밀번호가 일치하지 않아요'); return; }
+    if (pw1.value.length < 8) { toast('8자 이상이어야 합니다'); return; }
+    if (pw1.value !== pw2.value) { toast('비밀번호가 일치하지 않습니다'); return; }
     const { error } = await supabase.auth.updateUser({ password: pw1.value });
     if (error) { toast(error.message || '재설정 실패'); return; }
-    toast('비밀번호가 변경됐어요');
+    toast('비밀번호가 변경되었습니다');
     state.recovering = false;
     state.view = 'home';
     await hydrateFromSupabase();
@@ -1597,7 +1597,7 @@ function viewResetPw(){
 async function logout(){
   await supabase.auth.signOut();
   state.user = null; state.profile = null; state.archive = []; state.view = 'login';
-  render(); toast('로그아웃되었어요');
+  render(); toast('로그아웃되었습니다');
 }
 
 </script>
