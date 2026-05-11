@@ -788,9 +788,16 @@ function nav(v){ state.view=v; render(); window.scrollTo(0,0); }
 
 function render(){
   const root = $('#app'); root.innerHTML='';
+  if(state.recovering){
+    showChrome(false);
+    root.appendChild(viewResetPw());
+    return;
+  }
   if(!state.user){
     showChrome(false);
     if(state.view==='signup') root.appendChild(viewSignup());
+    else if(state.view==='find-id') root.appendChild(viewFindId());
+    else if(state.view==='find-pw') root.appendChild(viewFindPw());
     else root.appendChild(viewLogin());
   }else if(state.view==='select-cats' || !state.user.categories || state.user.categories.length===0){
     showChrome(false);
@@ -1243,7 +1250,14 @@ render();
 
 // React to Supabase auth changes (initial session, login, logout, token refresh)
 supabase.auth.onAuthStateChange((event, session) => {
-  hydrateFromSupabase();
+  if (event === 'PASSWORD_RECOVERY') {
+    state.recovering = true;
+    state.view = 'reset-pw';
+    render();
+  } else {
+    state.recovering = false;
+    hydrateFromSupabase();
+  }
 });
 
 /* ===== Auth Views ===== */
@@ -1275,8 +1289,8 @@ function viewLogin(){
   card.appendChild(el('div',{class:'auth-links'},
     el('a',{onclick:()=>{ state.view='signup'; render(); }},'회원가입'),
     el('div',{style:'display:flex;gap:14px'},
-      el('a',{onclick:()=>toast('Stage 4 백엔드 단계에서 추가됩니다')},'아이디 찾기'),
-      el('a',{onclick:()=>toast('Stage 4 백엔드 단계에서 추가됩니다')},'비밀번호 찾기')
+      el('a',{onclick:()=>{ state.view='find-id'; render(); }},'아이디 찾기'),
+      el('a',{onclick:()=>{ state.view='find-pw'; render(); }},'비밀번호 찾기')
     )
   ));
   wrap.appendChild(card);
@@ -1438,6 +1452,128 @@ function viewSelectCats(){
   ));
 
   wrap.appendChild(sheetFoot({sheetNo:'A-000-WC', title:'WELCOME'}));
+  return wrap;
+}
+
+
+function viewFindId(){
+  const wrap = el('div',{class:'auth-wrap'});
+  const card = el('div',{class:'auth-card'});
+  card.appendChild(el('div',{class:'auth-brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(el('div',{class:'auth-title'},'아이디 찾기'));
+  card.appendChild(el('div',{class:'auth-sub'},'가입 시 입력한 이름으로 이메일을 찾아드립니다.'));
+
+  const nameIn = el('input',{type:'text',required:'',placeholder:'이름 또는 닉네임',maxlength:'30'});
+  const resultBox = el('div',{class:'auth-note', style:'display:none;margin-top:14px'});
+
+  const form = el('form',{onsubmit:async (e)=>{
+    e.preventDefault();
+    const name = nameIn.value.trim();
+    if (!name) { toast('이름을 입력하세요'); return; }
+    resultBox.style.display = 'none';
+    resultBox.innerHTML = '';
+    try {
+      const r = await fetch('/api/find-id?name=' + encodeURIComponent(name));
+      const j = await r.json();
+      resultBox.style.display = 'block';
+      if (j.found === 0) {
+        resultBox.appendChild(document.createTextNode('해당 이름으로 가입된 계정이 없어요.'));
+      } else {
+        resultBox.appendChild(el('div',{},
+          el('strong',{},'찾은 계정 ' + j.found + '건:')
+        ));
+        for (const r of j.results) {
+          resultBox.appendChild(el('div',{style:'margin-top:6px'},
+            r.name + ' · ',
+            el('span',{class:'mono'}, r.masked)
+          ));
+        }
+      }
+    } catch (e) {
+      toast('조회 실패: ' + e.message);
+    }
+  }});
+  form.appendChild(el('div',{class:'field'}, el('label',{},'NAME'), nameIn));
+  form.appendChild(el('div',{class:'auth-cta'},
+    el('button',{class:'btn',type:'submit'},'찾기')
+  ));
+  card.appendChild(form);
+  card.appendChild(resultBox);
+
+  card.appendChild(el('div',{class:'auth-links'},
+    el('a',{onclick:()=>{ state.view='login'; render(); }},'← 로그인'),
+    el('a',{onclick:()=>{ state.view='find-pw'; render(); }},'비밀번호 찾기')
+  ));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+function viewFindPw(){
+  const wrap = el('div',{class:'auth-wrap'});
+  const card = el('div',{class:'auth-card'});
+  card.appendChild(el('div',{class:'auth-brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(el('div',{class:'auth-title'},'비밀번호 찾기'));
+  card.appendChild(el('div',{class:'auth-sub'},'가입한 이메일로 재설정 링크를 보내드립니다.'));
+
+  const emailIn = el('input',{type:'email',required:'',autocomplete:'email',placeholder:'you@example.com'});
+  const note = el('div',{class:'auth-note', style:'display:none;margin-top:14px'});
+
+  const form = el('form',{onsubmit:async (e)=>{
+    e.preventDefault();
+    const email = emailIn.value.trim().toLowerCase();
+    if (!/^\S+@\S+\.\S+$/.test(email)) { toast('이메일 형식을 확인해주세요'); return; }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: location.origin
+    });
+    if (error) { toast(error.message || '전송 실패'); return; }
+    note.style.display = 'block';
+    note.textContent = '재설정 링크를 ' + email + ' 로 보냈어요. 메일에서 링크를 클릭하세요.';
+  }});
+
+  form.appendChild(el('div',{class:'field'}, el('label',{},'EMAIL'), emailIn));
+  form.appendChild(el('div',{class:'auth-cta'},
+    el('button',{class:'btn',type:'submit'},'재설정 메일 받기')
+  ));
+  card.appendChild(form);
+  card.appendChild(note);
+
+  card.appendChild(el('div',{class:'auth-links'},
+    el('a',{onclick:()=>{ state.view='login'; render(); }},'← 로그인'),
+    el('a',{onclick:()=>{ state.view='find-id'; render(); }},'아이디 찾기')
+  ));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+function viewResetPw(){
+  const wrap = el('div',{class:'auth-wrap'});
+  const card = el('div',{class:'auth-card'});
+  card.appendChild(el('div',{class:'auth-brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(el('div',{class:'auth-title'},'비밀번호 재설정'));
+  card.appendChild(el('div',{class:'auth-sub'},'새 비밀번호를 입력하세요. (8자 이상)'));
+
+  const pw1 = el('input',{type:'password',required:'',autocomplete:'new-password',placeholder:'새 비밀번호',minlength:'8'});
+  const pw2 = el('input',{type:'password',required:'',autocomplete:'new-password',placeholder:'비밀번호 확인',minlength:'8'});
+
+  const form = el('form',{onsubmit:async (e)=>{
+    e.preventDefault();
+    if (pw1.value.length < 8) { toast('8자 이상이어야 해요'); return; }
+    if (pw1.value !== pw2.value) { toast('비밀번호가 일치하지 않아요'); return; }
+    const { error } = await supabase.auth.updateUser({ password: pw1.value });
+    if (error) { toast(error.message || '재설정 실패'); return; }
+    toast('비밀번호가 변경됐어요');
+    state.recovering = false;
+    state.view = 'home';
+    await hydrateFromSupabase();
+  }});
+
+  form.appendChild(el('div',{class:'field'}, el('label',{},'NEW PASSWORD'), pw1));
+  form.appendChild(el('div',{class:'field'}, el('label',{},'CONFIRM'), pw2));
+  form.appendChild(el('div',{class:'auth-cta'},
+    el('button',{class:'btn',type:'submit'},'비밀번호 변경')
+  ));
+  card.appendChild(form);
+  wrap.appendChild(card);
   return wrap;
 }
 
