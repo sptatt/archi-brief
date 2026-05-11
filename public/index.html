@@ -2,299 +2,1412 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ARCHI — Daily Brief</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARCHI — 건축학도를 위한 매일의 브리프</title>
+
+<meta name="theme-color" content="#0A0A0A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ARCHI">
+<link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" fill="%230A0A0A"/><text x="50%25" y="58%25" font-family="Helvetica" font-weight="700" font-size="40" fill="white" text-anchor="middle" letter-spacing="6">ARCHI</text></svg>'>
+<link rel="manifest" href='data:application/manifest+json,{"name":"ARCHI Brief","short_name":"ARCHI","start_url":".","display":"standalone","background_color":"%23F7F4EC","theme_color":"%230A0A0A","icons":[{"src":"data:image/svg%2Bxml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><rect width=%22192%22 height=%22192%22 fill=%22%230A0A0A%22/><text x=%2250%25%22 y=%2258%25%22 font-family=%22Helvetica%22 font-weight=%22700%22 font-size=%2240%22 fill=%22white%22 text-anchor=%22middle%22 letter-spacing=%226%22>ARCHI</text></svg>","sizes":"192x192","type":"image/svg+xml","purpose":"any"}]}'>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-  :root{--paper:#FBF8F0;--ink:#0A0A0A;--muted:#5A554E;--faint:#9F9A91;--hair:#D8D2C2;--card:#fff}
+  :root{
+    --paper:#FBF8F0;          /* warm drafting paper (lightened) */
+    --paper-2:#F5F0E2;
+    --card:#FFFFFF;
+    --ink:#0A0A0A;             /* drawing ink */
+    --ink-2:#1A1A1A;
+    --muted:#5A554E;
+    --faint:#9F9A91;
+    --hair:#D8D2C2;            /* hairline rule */
+    --hair-soft:#E8E3D5;
+    --grid:#ECE7D7;            /* dot grid */
+    --tag-bg:#EFEBDF;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Pretendard',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.6;background-image:radial-gradient(circle,#ECE7D7 0.8px,transparent 1.2px);background-size:24px 24px}
-  .wrap{max-width:480px;margin:0 auto;padding:48px 20px}
-  .card{background:#fff;border:1px solid var(--hair);border-radius:6px;padding:32px;position:relative}
-  .card::before{content:'';position:absolute;inset:-5px;pointer-events:none;background:linear-gradient(#0A0A0A,#0A0A0A) top left/10px 1px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) top left/1px 10px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) top right/10px 1px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) top right/1px 10px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) bottom left/10px 1px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) bottom left/1px 10px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) bottom right/10px 1px no-repeat,linear-gradient(#0A0A0A,#0A0A0A) bottom right/1px 10px no-repeat}
-  .brand{text-align:center;font-weight:700;letter-spacing:0.22em;font-size:12px;margin-bottom:24px}
-  h2{font-size:22px;font-weight:600;letter-spacing:-0.02em;margin-bottom:6px}
-  .sub{font-size:12.5px;color:var(--faint);margin-bottom:22px}
-  label{display:block;font-size:10px;font-weight:600;font-family:ui-monospace,monospace;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;margin-top:12px}
-  input[type=email],input[type=password],input[type=text]{width:100%;height:42px;padding:0 14px;border:1px solid var(--hair);border-radius:3px;background:#fff;font-size:13.5px}
-  input:focus{outline:none;border-color:var(--ink)}
-  input[type=time]{font-family:ui-monospace,monospace;font-size:13px;padding:6px 10px;border:1px solid var(--hair);border-radius:3px;accent-color:var(--ink);color-scheme:light}
-  button.btn{width:100%;height:44px;border:0;border-radius:4px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-top:18px}
-  button.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--hair);height:36px;font-size:12px;width:auto;padding:0 14px;margin-top:0}
-  button.btn:disabled{opacity:0.5;cursor:not-allowed}
-  .links{margin-top:18px;padding-top:18px;border-top:1px solid #E8E3D5;display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
-  .links a{cursor:pointer;color:var(--ink);border-bottom:1px solid transparent}
-  .links a:hover{border-bottom-color:var(--ink)}
-  .err{color:#9B2C2C;font-size:12px;margin-top:10px}
-  .ok{color:#2C7A2C;font-size:12px;margin-top:10px}
-  .cat-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--hair);border-radius:4px;background:#fff;margin-top:14px}
-  .cat{padding:14px;border-bottom:1px solid var(--hair);cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px}
-  .cat:nth-child(odd){border-right:1px solid var(--hair)}
-  .cat:nth-last-child(-n+2){border-bottom:none}
-  .cat:hover{background:#FAF7EE}
-  .cat.on{background:#FAF7EE}
-  .box{width:16px;height:16px;border:1.2px solid #BCB6A6;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-  .cat.on .box{background:var(--ink);border-color:var(--ink);color:#fff;font-size:11px}
-  .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid #E8E3D5}
-  .row:first-child{border-top:none}
-  .row .lbl{font-size:13px;font-weight:500}
-  .row .desc{font-size:11.5px;color:var(--faint)}
-  .toggle{width:38px;height:22px;background:#D8D2C2;border-radius:999px;position:relative;cursor:pointer}
-  .toggle::after{content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left .15s}
-  .toggle.on{background:var(--ink)}.toggle.on::after{left:19px}
+  html,body{height:100%}
+  body{
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    font-size:13.5px;line-height:1.65;letter-spacing:-0.005em;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle, var(--grid) 0.8px, transparent 1.2px);
+    background-size:24px 24px;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;padding:0}
+  input,select{font-family:inherit;font-size:inherit;color:inherit}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:0;font-feature-settings:"tnum" 1}
+
+  /* ===== Topbar ===== */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(251,248,240,0.92);
+    backdrop-filter:saturate(180%) blur(10px);
+    border-bottom:1px solid var(--hair);
+  }
+  .topbar-inner{
+    max-width:1180px;margin:0 auto;
+    padding:14px 36px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand-mark{
+    font-weight:700;font-size:14px;letter-spacing:0.22em;
+  }
+  .brand-divider{width:1px;height:14px;background:var(--hair);display:inline-block}
+  .brand-tag{
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:10.5px;color:var(--muted);letter-spacing:0.1em;
+  }
+  .nav{display:flex;gap:0;border:1px solid var(--hair);border-radius:999px;padding:3px;background:rgba(255,255,255,0.5)}
+  .nav button{
+    padding:6px 14px;font-size:12px;color:var(--muted);
+    border-radius:999px;transition:color .15s, background .15s;
+    letter-spacing:-0.005em;
+  }
+  .nav button:hover{color:var(--ink)}
+  .nav button.active{color:#fff;background:var(--ink)}
+
+  /* ===== Sheet (drawing frame) ===== */
+  .container{
+    max-width:1180px;margin:0 auto;
+    padding:36px 36px 24px;
+  }
+  .sheet{
+    position:relative;
+    background:transparent;
+    padding:32px 0 12px;
+  }
+  /* sheet frame (subtle hairline border around the page content) */
+  .sheet::before{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    border:1px solid var(--hair);
+    background:
+      /* corner crosshair top-left */
+      linear-gradient(var(--ink),var(--ink)) 12px 12px / 12px 1px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) 12px 12px / 1px 12px no-repeat,
+      /* top-right */
+      linear-gradient(var(--ink),var(--ink)) calc(100% - 12px) 12px / 12px 1px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) calc(100% - 13px) 12px / 1px 12px no-repeat,
+      /* bottom-left */
+      linear-gradient(var(--ink),var(--ink)) 12px calc(100% - 12px) / 12px 1px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) 12px calc(100% - 24px) / 1px 12px no-repeat,
+      /* bottom-right */
+      linear-gradient(var(--ink),var(--ink)) calc(100% - 12px) calc(100% - 12px) / 12px 1px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) calc(100% - 13px) calc(100% - 24px) / 1px 12px no-repeat;
+  }
+  .sheet-inner{padding:20px 40px 30px;position:relative}
+
+  /* ===== Drawing-sheet eyebrow ===== */
+  .eyebrow{
+    display:flex;align-items:center;gap:14px;
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--ink);font-weight:600;
+    margin-bottom:14px;
+  }
+  .eyebrow .num{font-weight:600}
+  .eyebrow .rule{flex:0 0 32px;height:1px;background:var(--ink);display:inline-block}
+  .eyebrow .label{color:var(--muted);font-weight:500}
+  .eyebrow .meta{
+    margin-left:auto;color:var(--faint);font-size:10px;letter-spacing:0.1em;font-weight:500;
+  }
+
+  /* ===== Type ===== */
+  .h1{font-size:46px;line-height:1.05;letter-spacing:-0.035em;font-weight:600}
+  .h2{font-size:30px;line-height:1.15;letter-spacing:-0.025em;font-weight:600}
+  .h3{font-size:15px;font-weight:600;letter-spacing:-0.01em}
+  .p-lead{font-size:15px;color:var(--muted);line-height:1.6;letter-spacing:-0.01em}
   .muted{color:var(--muted)}
-  .mono{font-family:ui-monospace,monospace}
-  .topbar{padding:14px 20px;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center;max-width:600px;margin:0 auto}
-  .topbar .brand-min{font-weight:700;letter-spacing:0.22em;font-size:12px}
-  .main{max-width:600px;margin:0 auto;padding:32px 20px}
-  .section{background:#fff;border:1px solid var(--hair);border-radius:4px;padding:20px;margin-bottom:16px}
-  .section h3{font-size:14px;font-weight:600;margin-bottom:6px}
-  .section p.note{font-size:11.5px;color:var(--faint)}
+  .faint{color:var(--faint)}
+  .row{display:flex;align-items:center;gap:12px}
+
+  /* ===== Buttons / inputs ===== */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    height:44px;padding:0 22px;border-radius:4px;
+    background:var(--ink);color:#fff;
+    font-size:13px;font-weight:600;letter-spacing:-0.005em;
+    transition:background .15s, transform .05s;
+  }
+  .btn:hover{background:#000}
+  .btn:active{transform:translateY(1px)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--hair)}
+  .btn-ghost:hover{background:rgba(0,0,0,0.04);border-color:var(--ink-2)}
+  .btn-sm{height:32px;padding:0 14px;font-size:12px;border-radius:3px}
+
+  .input{
+    height:46px;width:100%;padding:0 16px;
+    border:1px solid var(--hair);border-radius:4px;background:#fff;
+    font-size:14px;transition:border-color .15s;
+  }
+  .input:focus{outline:none;border-color:var(--ink)}
+
+  .tag{
+    display:inline-block;font-size:10.5px;letter-spacing:0.04em;
+    padding:3px 8px;border-radius:2px;background:var(--tag-bg);color:var(--muted);
+  }
+
+  /* ===== Onboarding ===== */
+  .onboard-hero{padding:56px 0 36px;border-bottom:1px solid var(--hair);margin-bottom:40px}
+  .onboard-hero .h1{max-width:760px}
+  .onboard-hero .p-lead{margin-top:18px;max-width:560px}
+  .form-block{margin-bottom:36px}
+  .form-label{
+    font-size:11px;font-weight:600;margin-bottom:12px;display:block;
+    font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);
+  }
+  .form-help{font-size:11.5px;color:var(--faint);margin-top:8px;letter-spacing:-0.005em}
+
+  .cat-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);
+    border:1px solid var(--hair);border-radius:6px;background:#fff;overflow:hidden;
+  }
+  .cat-item{
+    display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;
+    border-bottom:1px solid var(--hair);transition:background .12s;
+    position:relative;
+  }
+  .cat-item:nth-last-child(-n+2){border-bottom:none}
+  .cat-item:nth-child(odd){border-right:1px solid var(--hair)}
+  .cat-item:hover{background:#FAF9F4}
+  .cat-item.checked{background:#FAF9F4}
+  .cat-num{
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;
+    color:var(--faint);min-width:18px;letter-spacing:0.04em;
+  }
+  .checkbox{
+    width:16px;height:16px;border:1.2px solid #BCB6A6;border-radius:3px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:all .12s;background:#fff;
+  }
+  .cat-item.checked .checkbox{background:var(--ink);border-color:var(--ink)}
+  .checkbox svg{opacity:0;transition:opacity .12s}
+  .cat-item.checked .checkbox svg{opacity:1}
+  .cat-name{font-size:13.5px;font-weight:500;letter-spacing:-0.01em}
+  .cat-desc{font-size:11.5px;color:var(--faint);margin-top:1px}
+
+  /* ===== Today / Home ===== */
+  .today-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px}
+
+  /* On-demand action bar — clean drafting strip */
+  .now-bar{
+    margin:0 0 32px;background:#fff;
+    border:1px solid var(--ink);border-radius:4px;
+    display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;overflow:hidden;
+  }
+  .now-bar .now-tag{
+    background:var(--ink);color:#fff;
+    padding:0 18px;font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:10.5px;letter-spacing:0.18em;display:flex;align-items:center;
+  }
+  .now-bar .now-mid{
+    padding:14px 20px;display:flex;flex-direction:column;justify-content:center;
+    border-right:1px dashed var(--hair);
+  }
+  .now-bar .now-mid .lead{font-size:13.5px;font-weight:600}
+  .now-bar .now-mid .sub{font-size:11.5px;color:var(--faint);margin-top:2px}
+  .now-bar .now-cta{
+    display:flex;align-items:center;padding:0 20px;gap:10px;cursor:pointer;
+    background:#fff;transition:background .12s;border-left:1px solid var(--hair);
+  }
+  .now-bar .now-cta:hover{background:#FAF9F4}
+  .now-bar .now-cta .arrow{
+    width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1;
+  }
+  .now-bar .now-cta .label{font-size:12.5px;font-weight:600}
+
+  /* Digest cards: detail-callout style */
+  .digest-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .digest-card{
+    position:relative;background:var(--card);
+    border:1px solid var(--hair);border-radius:4px;
+    padding:0;display:flex;flex-direction:column;
+    transition:border-color .15s;
+  }
+  .digest-card:hover{border-color:var(--ink-2)}
+  .digest-card-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 16px;border-bottom:1px solid var(--hair);
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:10px;letter-spacing:0.14em;color:var(--muted);
+  }
+  .digest-card-bar .dtl{color:var(--ink);font-weight:600}
+  .digest-card-head{padding:18px 22px 14px}
+  .digest-time{font-size:10px;letter-spacing:0.16em;color:var(--faint);text-transform:uppercase;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .digest-title{font-size:18px;font-weight:600;letter-spacing:-0.015em;margin-top:4px}
+  .news-list{list-style:none;margin:0;padding:0 22px;flex:1}
+  .news-item{
+    padding:12px 0;border-top:1px solid var(--hair-soft);cursor:pointer;
+    display:flex;gap:14px;
+  }
+  .news-item:first-child{border-top:1px solid var(--hair)}
+  .news-num{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;color:var(--faint);min-width:22px;padding-top:3px;letter-spacing:0.05em}
+  .news-content{flex:1;min-width:0}
+  .news-headline{font-size:13.5px;font-weight:500;line-height:1.45;margin-bottom:5px;letter-spacing:-0.01em}
+  .news-meta{font-size:10.5px;color:var(--faint);display:flex;gap:8px;align-items:center;letter-spacing:0}
+  .news-meta .dot{width:2px;height:2px;background:#BBB6A8;border-radius:50%}
+  .digest-cta{padding:14px 22px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center}
+  .open-mail{font-size:11.5px;font-weight:600;color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:0.06em}
+
+  /* ===== Archive ===== */
+  .archive-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+  .search-input{flex:1;min-width:240px;height:40px;padding:0 14px;border:1px solid var(--hair);border-radius:3px;background:#fff}
+  .search-input:focus{outline:none;border-color:var(--ink)}
+  .filter-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px}
+  .chip{
+    font-size:11.5px;padding:6px 11px;border:1px solid var(--hair);border-radius:999px;
+    background:#fff;color:var(--muted);cursor:pointer;transition:all .12s;letter-spacing:-0.005em;
+  }
+  .chip:hover{border-color:var(--ink-2);color:var(--ink)}
+  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .archive-month{
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);
+    margin:30px 0 8px;padding-bottom:10px;border-bottom:1px solid var(--ink);
+    display:flex;justify-content:space-between;align-items:baseline;
+  }
+  .archive-month .count{color:var(--faint);font-size:10px}
+  .archive-row{
+    display:grid;grid-template-columns:80px 80px 1fr auto;gap:18px;align-items:center;
+    padding:14px 4px;border-bottom:1px solid var(--hair-soft);cursor:pointer;
+    transition:background .1s;
+  }
+  .archive-row:hover{background:#FAF9F4}
+  .archive-no{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;color:var(--faint);letter-spacing:0.04em}
+  .archive-slot{
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;
+    padding:3px 8px;border:1px solid var(--hair);border-radius:2px;
+    color:var(--muted);text-align:center;
+  }
+  .archive-slot.kr{border-color:var(--ink);color:var(--ink)}
+  .archive-slot.now{border-color:var(--ink);background:var(--ink);color:#fff}
+  .archive-summary{font-size:13px;color:var(--ink);line-height:1.5;letter-spacing:-0.01em}
+  .archive-cats{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:240px}
+
+  /* ===== Settings ===== */
+  .settings-section{
+    border:1px solid var(--hair);border-radius:4px;background:#fff;
+    padding:0;margin-bottom:18px;
+  }
+  .settings-section-head{
+    padding:14px 22px;border-bottom:1px solid var(--hair);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .settings-section-head .num{
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;
+    color:var(--faint);letter-spacing:0.14em;
+  }
+  .settings-section-body{padding:6px 22px}
+  .settings-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 0;border-bottom:1px solid var(--hair-soft);gap:16px;
+  }
+  .settings-row:last-child{border-bottom:none}
+  .settings-row .label-block{flex:1}
+  .settings-label{font-size:13.5px;font-weight:500;letter-spacing:-0.01em}
+  .settings-desc{font-size:11.5px;color:var(--faint);margin-top:2px}
+  .toggle{
+    width:38px;height:22px;background:#D8D2C2;border-radius:999px;position:relative;
+    cursor:pointer;transition:background .15s;flex-shrink:0;
+  }
+  .toggle::after{
+    content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;
+    background:#fff;border-radius:50%;transition:left .15s;
+    box-shadow:0 1px 2px rgba(0,0,0,0.15);
+  }
+  .toggle.on{background:var(--ink)}
+  .toggle.on::after{left:19px}
+  .time-input{
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;
+    padding:6px 10px;border:1px solid var(--hair);border-radius:3px;background:#fff;
+    color:var(--ink);
+    accent-color:var(--ink);
+    color-scheme:light;
+  }
+  .time-input:focus{outline:none;border-color:var(--ink)}
+  .time-input::selection{background:var(--ink);color:#fff}
+  .time-input::-webkit-datetime-edit-hour-field:focus,
+  .time-input::-webkit-datetime-edit-minute-field:focus,
+  .time-input::-webkit-datetime-edit-second-field:focus,
+  .time-input::-webkit-datetime-edit-ampm-field:focus{
+    background:var(--ink);color:#fff;outline:none;border-radius:2px;
+  }
+  .time-input::-webkit-calendar-picker-indicator{
+    filter:grayscale(1) brightness(0.4);cursor:pointer;opacity:0.6;
+  }
+  .time-input::-webkit-calendar-picker-indicator:hover{opacity:1}
+
+  /* ===== Sheet footer (scale ruler + title block) ===== */
+  .sheet-foot{
+    margin-top:48px;padding-top:24px;border-top:1px solid var(--ink);
+    display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;
+  }
+  .scale-ruler{
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:9.5px;color:var(--muted);letter-spacing:0.04em;
+  }
+  .scale-ruler-bar{
+    height:10px;width:240px;position:relative;
+    border-bottom:1px solid var(--ink);margin:0 0 4px;
+    background:repeating-linear-gradient(to right,
+      var(--ink) 0, var(--ink) 1px, transparent 1px, transparent 24px);
+  }
+  .scale-ruler-bar::after{
+    content:'';position:absolute;right:0;top:0;width:1px;height:100%;background:var(--ink);
+  }
+  .scale-ruler-labels{display:flex;justify-content:space-between;width:240px;font-size:9px;color:var(--faint)}
+  .title-block-foot{
+    border:1px solid var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:9.5px;display:grid;grid-template-columns:auto auto;
+    background:#fff;
+  }
+  .title-block-foot .k{padding:5px 9px;border-bottom:1px solid var(--hair);background:#FAF7EE;color:var(--faint);text-align:right;letter-spacing:0.06em}
+  .title-block-foot .v{padding:5px 11px;border-bottom:1px solid var(--hair);border-left:1px solid var(--hair);color:var(--ink)}
+  .title-block-foot > div:nth-last-child(-n+2){border-bottom:none}
+
+  /* ===== Bottom nav (mobile) ===== */
+  .bottom-nav{
+    display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:rgba(251,248,240,0.96);backdrop-filter:saturate(180%) blur(14px);
+    border-top:1px solid var(--hair);
+    padding:8px 8px max(8px,env(safe-area-inset-bottom));
+    grid-template-columns:1fr 1fr 1fr;gap:4px;
+  }
+  .bottom-nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:6px;color:var(--faint);font-size:10.5px;font-weight:500}
+  .bottom-nav button.active{color:var(--ink)}
+  .bottom-nav .icon{width:20px;height:20px;display:block}
+
+  /* ===== Email modal ===== */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(10,10,10,0.55);z-index:100;
+    display:none;align-items:flex-start;justify-content:center;padding:48px 16px;
+    overflow-y:auto;
+  }
+  .modal-overlay.show{display:flex}
+  .mail-frame{
+    background:#fff;border-radius:6px;width:100%;max-width:660px;
+    box-shadow:0 30px 80px rgba(0,0,0,0.25);overflow:hidden;
+  }
+  .mail-header{
+    padding:14px 22px;border-bottom:1px solid var(--hair);
+    display:flex;justify-content:space-between;align-items:center;
+    background:#FAF7EE;
+  }
+  .mail-from{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--muted)}
+  .mail-from strong{color:var(--ink);font-weight:600}
+  .mail-close{width:30px;height:30px;border-radius:50%;background:#fff;border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .mail-body{padding:36px 36px 24px}
+  .mail-brand{
+    font-weight:700;letter-spacing:0.22em;font-size:12px;
+    padding-bottom:18px;border-bottom:2px solid var(--ink);
+    display:flex;justify-content:space-between;align-items:baseline;
+  }
+  .mail-brand .right{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10px;color:var(--faint);letter-spacing:0.14em;font-weight:500}
+  .title-block{
+    border:1px solid var(--ink);border-radius:2px;
+    display:grid;grid-template-columns:auto 1fr;
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10px;
+    color:var(--ink);letter-spacing:0.06em;background:#fff;
+  }
+  .title-block .tb-k{padding:4px 9px;border-bottom:1px solid var(--hair);color:var(--faint);background:#FAF7EE;text-align:right}
+  .title-block .tb-v{padding:4px 11px;border-bottom:1px solid var(--hair);border-left:1px solid var(--hair)}
+  .title-block > div:nth-last-child(-n+2){border-bottom:none}
+  .mail-news{padding:18px 0;border-top:1px solid var(--hair-soft)}
+  .mail-news:first-of-type{border-top:none;padding-top:8px}
+  .mail-news-num{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;color:var(--faint);margin-bottom:6px;letter-spacing:0.06em}
+  .mail-news-title{font-size:16px;font-weight:600;line-height:1.4;margin-bottom:8px;letter-spacing:-0.015em}
+  .mail-news-excerpt{font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.55}
+  .mail-news-foot{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--faint)}
+  .mail-news-link{font-size:10.5px;color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);padding-bottom:1px;font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:0.06em}
+  .mail-footer{padding:18px 36px;background:#FAF7EE;border-top:1px solid var(--hair);font-size:10.5px;color:var(--faint);text-align:center;line-height:1.65;font-family:ui-monospace,Menlo,Consolas,monospace}
+
+  /* ===== Misc ===== */
+  .empty{
+    text-align:center;padding:64px 16px;color:var(--faint);
+    border:1px dashed var(--hair);border-radius:4px;background:rgba(255,255,255,0.4);
+  }
+  .empty .h3{color:var(--ink);margin-bottom:8px}
+  .empty p{font-size:13px;margin-bottom:18px}
+  .empty .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .toast{
+    position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;padding:11px 18px;border-radius:4px;font-size:12.5px;
+    opacity:0;transition:all .25s;pointer-events:none;z-index:200;font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:0.04em;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* North arrow */
+  .north{
+    position:absolute;top:18px;right:18px;width:28px;height:28px;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    color:var(--muted);
+  }
+  .north svg{width:18px;height:18px}
+  .north .n-label{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:8px;letter-spacing:0.1em;margin-top:1px}
+
+  @media (max-width:760px){
+    body{font-size:13px}
+    .container{padding:18px 14px 100px}
+    .sheet-inner{padding:16px 18px 22px}
+    .topbar-inner{padding:12px 18px}
+    .h1{font-size:32px}
+    .h2{font-size:24px}
+    .digest-grid{grid-template-columns:1fr}
+    .cat-grid{grid-template-columns:1fr}
+    .cat-item:nth-child(odd){border-right:none}
+    .cat-item{border-bottom:1px solid var(--hair)}
+    .cat-item:last-child{border-bottom:none}
+    .archive-row{grid-template-columns:auto 1fr;gap:8px;padding:14px 0}
+    .archive-no{display:none}
+    .archive-cats{justify-content:flex-start;max-width:none;grid-column:1/-1}
+    .nav{display:none}
+    .bottom-nav{display:grid}
+    .now-bar{grid-template-columns:auto 1fr}
+    .now-bar .now-cta{grid-column:1/-1;border-left:none;border-top:1px dashed var(--hair);justify-content:center;padding:14px}
+    .now-bar .now-mid{border-right:none}
+    .sheet-foot{grid-template-columns:1fr}
+    .north{display:none}
+  }
+
+  /* ===== Auth (login / signup / verify) ===== */
+  .auth-wrap{min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;padding:48px 16px}
+  .auth-card{width:100%;max-width:420px;background:#fff;border:1px solid var(--hair);border-radius:6px;padding:34px 32px 26px;position:relative}
+  .auth-card::before{
+    content:'';position:absolute;inset:-5px;pointer-events:none;
+    background:
+      linear-gradient(var(--ink),var(--ink)) top left / 10px 1px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) top left / 1px 10px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) top right / 10px 1px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) top right / 1px 10px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) bottom left / 10px 1px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) bottom left / 1px 10px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) bottom right / 10px 1px no-repeat,
+      linear-gradient(var(--ink),var(--ink)) bottom right / 1px 10px no-repeat;
+  }
+  .auth-brand{text-align:center;margin-bottom:26px;font-weight:700;letter-spacing:0.22em;font-size:12px}
+  .auth-title{font-size:24px;font-weight:600;letter-spacing:-0.02em;margin-bottom:6px}
+  .auth-sub{font-size:12.5px;color:var(--faint);margin-bottom:24px;line-height:1.55}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:10px;font-weight:600;font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);margin-bottom:6px}
+  .field input{width:100%;height:42px;padding:0 14px;border:1px solid var(--hair);border-radius:3px;background:#fff;font-size:13.5px;transition:border-color .15s}
+  .field input:focus{outline:none;border-color:var(--ink)}
+  .auth-cta{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+  .auth-cta .btn{width:100%}
+  .auth-links{margin-top:18px;padding-top:18px;border-top:1px solid var(--hair-soft);display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--muted);gap:10px;flex-wrap:wrap}
+  .auth-links a{cursor:pointer;border-bottom:1px solid transparent;transition:border-color .12s}
+  .auth-links a:hover{border-bottom-color:var(--ink);color:var(--ink)}
+  .auth-note{margin-top:18px;padding:14px 16px;background:#FAF7EE;border:1px dashed var(--hair);border-radius:3px;font-size:11.5px;color:var(--muted);line-height:1.6}
+  .auth-note .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:20px;letter-spacing:0.3em;color:var(--ink);font-weight:600;display:block;margin-top:8px;text-align:center}
+  .code-input{width:100%;height:54px;text-align:center;letter-spacing:0.4em;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:22px;font-weight:600;border:1px solid var(--hair);border-radius:4px;background:#fff;padding:0}
+  .code-input:focus{outline:none;border-color:var(--ink)}
+
 </style>
 </head>
 <body>
-<div id="app"></div>
 
-<!-- Supabase JS via CDN -->
+<header class="topbar" id="topbar" style="display:none">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">ARCHI</div>
+      <span class="brand-divider"></span>
+      <div class="brand-tag">DAILY · BRIEF</div>
+    </div>
+    <nav class="nav">
+      <button data-view="home">오늘</button>
+      <button data-view="archive">아카이브</button>
+      <button data-view="settings">설정</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container" id="container">
+  <div class="sheet">
+    <div class="sheet-inner" id="app"></div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="modal">
+  <div class="mail-frame" id="mailFrame"></div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav" style="display:none">
+  <button data-view="home">
+    <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="14" height="14" rx="0.5"/><path d="M7 7h6M7 10h6M7 13h4"/></svg>
+    오늘
+  </button>
+  <button data-view="archive">
+    <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="14" height="4" rx="0.4"/><rect x="3" y="9" width="14" height="8" rx="0.4"/><path d="M8 12h4"/></svg>
+    아카이브
+  </button>
+  <button data-view="settings">
+    <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="10" cy="10" r="2.5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.2 5.2l1.4 1.4M13.4 13.4l1.4 1.4M5.2 14.8l1.4-1.4M13.4 6.6l1.4-1.4"/></svg>
+    설정
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-/* ====== CONFIG (replace these with your own) ====== */
-const SUPABASE_URL = 'https://jiobzqvwcxhdgstcgeib.supabase.co';      // e.g. https://abcdefg.supabase.co
+/* ====== CONFIG: replace these two with your Supabase values ====== */
+const SUPABASE_URL = 'https://jiobzqvwcxhdgstcgeib.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_1cssRrsojhRfvpujHStJHg_qUTPfKpA';
-/* ================================================== */
+/* ================================================================= */
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+/* ============ Categories ============ */
 const CATEGORIES = [
-  { id:'design',  name:'건축가 · 작품' },
-  { id:'material',name:'건축 재료 · 자재' },
-  { id:'green',   name:'친환경 · 지속가능' },
-  { id:'safety',  name:'구조 · 소방 · 안전' },
-  { id:'policy',  name:'법규 · 정책' },
-  { id:'tech',    name:'건설 기술 · BIM' },
-  { id:'urban',   name:'도시계획 · 재생' },
-  { id:'edu',     name:'공모전 · 학술' },
+  { id:'design',   name:'건축가 · 작품',          desc:'국내외 화제 프로젝트, 인터뷰' },
+  { id:'material', name:'건축 재료 · 자재',        desc:'신소재, 친환경 자재, 시장 동향' },
+  { id:'green',    name:'친환경 · 지속가능 건축',  desc:'패시브하우스, ZEB, 탄소중립' },
+  { id:'safety',   name:'구조 · 소방 · 안전',      desc:'내진, 소방 법규, 사고·예방' },
+  { id:'policy',   name:'법규 · 정책 · 인허가',    desc:'건축법 개정, 정부·지자체 정책' },
+  { id:'tech',     name:'건설 기술 · BIM · 디지털', desc:'BIM, 모듈러, 3D 프린팅, AI' },
+  { id:'urban',    name:'도시계획 · 도시재생',     desc:'재개발, 신도시, 스마트시티' },
+  { id:'edu',      name:'공모전 · 학술 · 교육',    desc:'공모전, 학회, 자격증·교육' },
 ];
 
-const app = document.getElementById('app');
-const h = (tag, attrs={}, ...kids) => {
-  const n = document.createElement(tag);
-  for (const [k,v] of Object.entries(attrs)) {
-    if (k==='class') n.className = v;
-    else if (k==='html') n.innerHTML = v;
-    else if (k.startsWith('on')) n.addEventListener(k.slice(2).toLowerCase(), v);
-    else n.setAttribute(k, v);
-  }
-  for (const c of kids) {
-    if (c==null) continue;
-    n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
-  }
-  return n;
-};
+/* ============ Sample Pool ============ */
+const SAMPLE_KR = [
+  {cat:'design',  title:'서울시청 신청사 리노베이션 공모, 41개 팀 참여', src:'한국건설신문', excerpt:'서울시는 청사 리노베이션 설계공모 결과 총 41개 팀이 참가했다고 밝혔다. 당선작은 다음 달 발표된다.'},
+  {cat:'green',   title:'국토부, 2030년까지 모든 신축에 ZEB 5등급 의무화', src:'대한건축사협회지', excerpt:'국토교통부 로드맵에 따르면 2030년부터 연면적 500㎡ 이상 모든 신축 건축물은 제로에너지건축 5등급 인증이 의무화된다.'},
+  {cat:'safety',  title:'아파트 화재 안전 강화, 발코니 확장 규정 개정 예고', src:'건축도시정책', excerpt:'발코니 확장형 세대의 방화 성능 기준이 강화될 전망이다. 행정예고 기간은 30일이다.'},
+  {cat:'tech',    title:'국내 첫 8층 모듈러 공동주택 시공 완료', src:'건설경제', excerpt:'세종시 행복주택 단지에 국내 최초 8층 모듈러 공법 공동주택이 시공 완료됐다. 공기 약 40% 단축.'},
+  {cat:'urban',   title:'서울 강북 노후 저층주거지 도시재생 예산 1,200억 확정', src:'서울시 보도자료', excerpt:'강북구 일대 노후 저층주거지 정비를 위한 도시재생 예산이 확정됐다. 2027년까지 단계적 시행.'},
+  {cat:'material',title:'CLT(직교집성판) 국내 인증 확대, 중고층 목조 활성화 기대', src:'한국목조건축협회', excerpt:'국립산림과학원이 CLT 인증 범위를 확대하며 국내 중고층 목조 건축이 본격화될 전망이다.'},
+  {cat:'policy',  title:'건축법 시행령 개정안 입법예고 — 용도변경 절차 간소화', src:'법제처', excerpt:'기존 14종이던 용도분류가 9종으로 통합되며 단순 용도변경 절차가 대폭 간소화된다.'},
+  {cat:'edu',     title:'2026 대한민국 건축대전 공모 일정 공고', src:'건축학회', excerpt:'대상 상금 1,500만 원. 학생 부문은 별도 심사. 접수 마감 7월 31일.'},
+  {cat:'design',  title:'유현준 건축가, 청주 미술관 신축 설계 당선', src:'ArchDaily Korea', excerpt:'청주시립미술관 신축 설계 공모에서 유현준 건축가의 안이 당선작으로 선정됐다.'},
+  {cat:'green',   title:'서울시, 공공건축물 옥상녹화 의무화 조례 추진', src:'서울시 보도자료', excerpt:'연면적 1,000㎡ 이상 신축 공공건축물은 옥상 녹화를 의무화하는 조례 개정안이 추진된다.'},
+  {cat:'safety',  title:'전기차 화재 대응 위한 지하주차장 설계 가이드라인 발표', src:'소방청', excerpt:'국토부와 소방청이 합동으로 전기차 화재에 대응하는 지하주차장 설계 가이드라인을 발표했다.'},
+  {cat:'tech',    title:'국내 BIM 의무화 단계 확대 — 2026년부터 100억 이상 공공공사', src:'조달청', excerpt:'2026년부터 추정금액 100억 원 이상 모든 공공 건설공사에 BIM 적용이 의무화된다.'},
+];
+const SAMPLE_INT = [
+  {cat:'design',  title:'2026 Pritzker Prize Awarded to Brazilian Architect', src:'ArchDaily', excerpt:'The 2026 Pritzker Architecture Prize has been awarded to a Brazilian architect known for vernacular tropical modernism.'},
+  {cat:'design',  title:'BIG Reveals Vertical Forest Tower in Singapore', src:'Dezeen', excerpt:'Bjarke Ingels Group has unveiled designs for a 320m vertical forest tower integrated with a public sky park.'},
+  {cat:'green',   title:'EU Tightens Embodied Carbon Limits for New Buildings', src:'Architectural Record', excerpt:'New EU directive caps embodied carbon emissions for buildings over 1,000㎡, effective 2027.'},
+  {cat:'tech',    title:'MIT Develops Self-Healing Concrete Using Bacterial Spores', src:'MIT Technology Review', excerpt:'A new bio-concrete embedded with bacterial spores can self-repair cracks up to 1mm wide.'},
+  {cat:'urban',   title:'Tokyo Approves Shibuya Redevelopment Phase 4', src:'Japan Times', excerpt:'Phase 4 of the Shibuya redevelopment masterplan has been approved, including a new pedestrian-only district.'},
+  {cat:'material',title:'Hempcrete Gets U.S. Building Code Approval', src:'BD+C', excerpt:'Hempcrete has been formally approved as a building material in the latest U.S. residential code update.'},
+  {cat:'policy',  title:'UK Mandates Whole-Life Carbon Assessment for All New Builds', src:'Building Magazine', excerpt:'From 2027, all new buildings in the UK must include a whole-life carbon assessment in planning submissions.'},
+  {cat:'safety',  title:'Post-Earthquake Code Revisions Tested in Turkey', src:'ENR', excerpt:'Turkey rolls out updated seismic codes following the 2023 earthquake, with stricter enforcement protocols.'},
+  {cat:'edu',     title:'AA School Announces Free Online Lecture Series', src:'Architectural Association', excerpt:'The AA School of Architecture launches a free open lecture series for global students.'},
+  {cat:'design',  title:'Zaha Hadid Architects Win Riyadh Cultural Center Bid', src:'Dezeen', excerpt:'Zaha Hadid Architects have won the international competition to design the Riyadh Cultural Center.'},
+  {cat:'tech',    title:'Autodesk Forma Adds Real-Time Daylight Simulation', src:'AEC Magazine', excerpt:'Autodesk Forma rolls out an AI-driven real-time daylight simulation feature in its latest update.'},
+  {cat:'green',   title:'Copenhagen On Track for First Carbon-Neutral Capital by 2027', src:'Architects Journal', excerpt:'Copenhagen reports it is on schedule to become the world first carbon-neutral capital city by 2027.'},
+];
 
-let state = { user:null, profile:null, view:'login', msg:'' };
+/* ============ State ============ */
+const STORE = 'archi_brief_v2';
+const defaultState = ()=>({ user:null, profile:null, archive:[], view:'login' });
+let state = loadState();
 
-async function refresh() {
+function loadState(){
+  return defaultState();
+}
+async function hydrateFromSupabase(){
   const { data: { user } } = await supabase.auth.getUser();
-  state.user = user || null;
-  if (user) {
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-    state.profile = profile;
-    state.view = (profile?.categories?.length ? 'main' : 'cats');
-  } else {
-    state.view = state.view==='signup' ? 'signup' : 'login';
+  if (!user) {
+    state.user = null; state.profile = null; state.archive = [];
+    if (state.view !== 'signup') state.view = 'login';
+    render(); return;
   }
+  let { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+  if (!profile) {
+    await supabase.from('profiles').insert({ id: user.id, name: user.user_metadata?.name || '' });
+    const r = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    profile = r.data;
+  }
+  state.profile = profile;
+  state.user = {
+    id: user.id, email: user.email,
+    name: profile?.name || user.user_metadata?.name || '',
+    categories: profile?.categories || [],
+    times: {
+      morning: (profile?.send_morning || '09:00:00').slice(0,5),
+      evening: (profile?.send_evening || '18:00:00').slice(0,5),
+    },
+    paused: !!profile?.paused,
+    since: profile?.created_at || user.created_at,
+  };
+  const { data: digests } = await supabase.from('digests').select('*').order('sent_at', { ascending:false }).limit(60);
+  state.archive = (digests||[]).map(d => ({
+    date: new Date(d.sent_at),
+    region: d.region || (d.slot === 'morning' ? 'kr' : d.slot === 'evening' ? 'int' : 'now'),
+    time: new Date(d.sent_at).toTimeString().slice(0,5),
+    items: d.items || [],
+  }));
+  if (!state.user.categories.length) state.view = 'select-cats';
+  else if (state.view === 'login' || state.view === 'signup' || state.view === 'verify') state.view = 'home';
   render();
 }
+async function saveState(){
+  if (!state.user) return;
+  const updates = {
+    name: state.user.name,
+    categories: state.user.categories,
+    send_morning: (state.user.times.morning || '09:00') + ':00',
+    send_evening: (state.user.times.evening || '18:00') + ':00',
+    paused: !!state.user.paused,
+  };
+  const { error } = await supabase.from('profiles').update(updates).eq('id', state.user.id);
+  if (error) console.error('saveState:', error);
+}
 
-supabase.auth.onAuthStateChange(() => { refresh(); });
+/* ============ Utils ============ */
+const $ = (s,r=document)=>r.querySelector(s);
+function el(tag, attrs={}, ...children){
+  const n = document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs||{})){
+    if(k==='class') n.className=v;
+    else if(k==='html') n.innerHTML=v;
+    else if(k.startsWith('on')) n.addEventListener(k.slice(2).toLowerCase(), v);
+    else n.setAttribute(k,v);
+  }
+  for(const c of children){
+    if(c==null||c===false) continue;
+    if(typeof c==='string'||typeof c==='number') n.appendChild(document.createTextNode(String(c)));
+    else n.appendChild(c);
+  }
+  return n;
+}
+function catName(id){ const c = CATEGORIES.find(x=>x.id===id); return c?c.name:id; }
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(window.__t); window.__t = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function pad(n,w=2){ return String(n).padStart(w,'0'); }
+function fmtDate(d){ return `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())}`; }
+function fmtDateLong(d){
+  const dow = ['일','월','화','수','목','금','토'][d.getDay()];
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${dow})`;
+}
+function fmtMonth(d){ return `${d.getFullYear()} · ${pad(d.getMonth()+1)}`; }
+function fmtTime(d){ return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
+function sheetNoFor(d, slot){
+  const base = String((d.getMonth()+1)*100 + d.getDate()).padStart(4,'0');
+  const suf = slot==='kr'?'KR':slot==='int'?'IN':'ND';
+  return `A-${base}-${suf}`;
+}
+function pickItems(pool, seed, n=5){
+  let s = seed; const out = []; const used = new Set();
+  while(out.length < n && used.size < pool.length){
+    s = (s*9301 + 49297) % 233280;
+    const i = Math.floor((s/233280)*pool.length);
+    if(!used.has(i)){ used.add(i); out.push(pool[i]); }
+  }
+  return out;
+}
+function categoryFiltered(pool){ return pool.filter(x=> state.user.categories.includes(x.cat)); }
 
-function render() {
-  app.innerHTML = '';
-  if (!state.user) {
-    app.appendChild(state.view==='signup' ? viewSignup() : viewLogin());
-  } else if (state.view === 'cats') {
-    app.appendChild(viewCats());
-  } else {
-    app.appendChild(viewMain());
+/* ============ North arrow icon ============ */
+function northArrow(){
+  return el('div',{class:'north', html:`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 5 L8 19 L12 16 L16 19 Z" fill="currentColor" stroke="none"/>
+    </svg>
+    <div class="n-label">N</div>
+  `});
+}
+
+/* ============ Sheet footer (scale ruler + title block) ============ */
+function sheetFoot(opts){
+  const {sheetNo='A-001', title='DAILY BRIEF'} = opts||{};
+  const today = new Date();
+  return el('div',{class:'sheet-foot'},
+    el('div',{class:'scale-ruler'},
+      el('div',{class:'scale-ruler-bar'}),
+      el('div',{class:'scale-ruler-labels'},
+        el('span',{},'0'),
+        el('span',{},'50'),
+        el('span',{},'100'),
+        el('span',{},'150'),
+        el('span',{},'200 mm')
+      ),
+      el('div',{style:'margin-top:8px'}, `SCALE 1:1 · UNIT mm · ${title}`)
+    ),
+    (function(){
+      const tb = el('div',{class:'title-block-foot'});
+      [
+        ['SHEET', sheetNo],
+        ['DATE', fmtDate(today)],
+        ['REV.', '01.0'],
+        ['BY', 'ARCHI']
+      ].forEach(([k,v])=>{
+        tb.appendChild(el('div',{class:'k'},k));
+        tb.appendChild(el('div',{class:'v'},v));
+      });
+      return tb;
+    })()
+  );
+}
+
+/* ============ Renderers ============ */
+function setActiveNav(){
+  document.querySelectorAll('.nav button, .bottom-nav button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.view===state.view);
+  });
+}
+function showChrome(show){
+  $('#topbar').style.display = show?'block':'none';
+  const bn = $('#bottomNav'); if(bn) bn.style.display = show?'':'none';
+}
+function nav(v){ state.view=v; render(); window.scrollTo(0,0); }
+
+function render(){
+  const root = $('#app'); root.innerHTML='';
+  if(!state.user){
+    showChrome(false);
+    if(state.view==='signup') root.appendChild(viewSignup());
+    else root.appendChild(viewLogin());
+  }else if(state.view==='select-cats' || !state.user.categories || state.user.categories.length===0){
+    showChrome(false);
+    root.appendChild(viewSelectCats());
+  }else{
+    showChrome(true); setActiveNav();
+    if(state.view==='archive') root.appendChild(viewArchive());
+    else if(state.view==='settings') root.appendChild(viewSettings());
+    else root.appendChild(viewHome());
   }
 }
 
-function viewLogin() {
-  const wrap = h('div',{class:'wrap'});
-  const card = h('div',{class:'card'});
-  card.appendChild(h('div',{class:'brand'},'ARCHI · DAILY BRIEF'));
-  card.appendChild(h('h2',{},'로그인'));
-  card.appendChild(h('div',{class:'sub'},'가입한 이메일과 비밀번호를 입력하세요.'));
+/* ===== Home (Today) ===== */
+function viewHome(){
+  const wrap = el('div');
+  const today = new Date();
+  const sheetNo = String((today.getMonth()+1)*100 + today.getDate()).padStart(4,'0');
+  wrap.appendChild(northArrow());
 
-  const email = h('input',{type:'email',autocomplete:'email',placeholder:'you@example.com'});
-  const pw    = h('input',{type:'password',autocomplete:'current-password',placeholder:'••••••••'});
-  const msg   = h('div',{class:'err'});
-
-  card.appendChild(h('label',{},'EMAIL')); card.appendChild(email);
-  card.appendChild(h('label',{},'PASSWORD')); card.appendChild(pw);
-  card.appendChild(msg);
-  card.appendChild(h('button',{class:'btn', onclick: async ()=>{
-    msg.textContent='';
-    const { error } = await supabase.auth.signInWithPassword({ email: email.value.trim(), password: pw.value });
-    if (error) msg.textContent = error.message;
-    else refresh();
-  }}, '로그인'));
-
-  card.appendChild(h('div',{class:'links'},
-    h('a',{onclick:()=>{state.view='signup';render();}},'회원가입'),
-    h('a',{onclick: async ()=>{
-      const e = prompt('가입한 이메일을 입력하세요');
-      if (!e) return;
-      const { error } = await supabase.auth.resetPasswordForEmail(e, { redirectTo: location.origin });
-      alert(error ? error.message : '비밀번호 재설정 메일을 보냈습니다');
-    }},'비밀번호 찾기')
+  wrap.appendChild(el('div',{class:'today-head'},
+    el('div',{},
+      el('div',{class:'eyebrow'},
+        el('span',{class:'num'},'01'),
+        el('span',{class:'rule'}),
+        el('span',{class:'label'},'TODAY · 오늘'),
+      ),
+      el('h2',{class:'h2'}, fmtDateLong(today))
+    ),
+    el('div',{class:'row'},
+      el('span',{class:'tag mono'}, `CATS · ${pad(state.user.categories.length)}`),
+      el('button',{class:'btn-sm btn-ghost btn', onclick:()=>nav('settings')}, '설정')
+    )
   ));
-  wrap.appendChild(card);
+
+  // Send-now bar
+  wrap.appendChild(makeNowBar());
+
+  const grid = el('div',{class:'digest-grid'});
+  const seed = today.getFullYear()*10000 + (today.getMonth()+1)*100 + today.getDate();
+  const krItems = pickItems(categoryFiltered(SAMPLE_KR), seed+1);
+  const intItems = pickItems(categoryFiltered(SAMPLE_INT), seed+2);
+
+  grid.appendChild(makeDigestCard({region:'국내',regionLabel:'KOREA',time:'09:00',title:'국내 건축 소식',items:krItems,date:today,slot:'kr',dtl:'01'}));
+  grid.appendChild(makeDigestCard({region:'해외',regionLabel:'GLOBAL',time:'18:00',title:'Global Architecture',items:intItems,date:today,slot:'int',dtl:'02'}));
+  wrap.appendChild(grid);
+
+  wrap.appendChild(sheetFoot({sheetNo:`A-${sheetNo}-T`, title:'TODAY'}));
   return wrap;
 }
 
-function viewSignup() {
-  const wrap = h('div',{class:'wrap'});
-  const card = h('div',{class:'card'});
-  card.appendChild(h('div',{class:'brand'},'ARCHI · DAILY BRIEF'));
-  card.appendChild(h('h2',{},'회원가입'));
-  card.appendChild(h('div',{class:'sub'},'이메일·비밀번호로 계정을 만듭니다. 가입 후 인증 메일을 보내드립니다.'));
+function makeNowBar(){
+  return el('div',{class:'now-bar'},
+    el('div',{class:'now-tag'}, 'ON-DEMAND'),
+    el('div',{class:'now-mid'},
+      el('div',{class:'lead'}, '지금 바로 받기'),
+      el('div',{class:'sub'}, '예약 시간과 별도로, 즉시 5건의 새 브리프를 받습니다.')
+    ),
+    el('div',{class:'now-cta', onclick:sendNow},
+      el('div',{class:'arrow'}, '+'),
+      el('div',{class:'label'}, '지금 받기')
+    )
+  );
+}
 
-  const name  = h('input',{type:'text',placeholder:'이름 또는 닉네임'});
-  const email = h('input',{type:'email',autocomplete:'email',placeholder:'you@example.com'});
-  const pw    = h('input',{type:'password',autocomplete:'new-password',placeholder:'8자 이상'});
-  const msg   = h('div',{class:'err'});
+function sendNow(){
+  const pool = [...categoryFiltered(SAMPLE_KR), ...categoryFiltered(SAMPLE_INT)];
+  if(pool.length===0){ toast('구독 분야를 1개 이상 선택해주세요'); return; }
+  const items = pickItems(pool, Date.now()%100000);
+  const now = new Date();
+  const digest = { date: now, region:'now', time: fmtTime(now), items };
+  state.archive = [digest, ...state.archive];
+  saveState();
+  openMail({region:'온디맨드',regionLabel:'ON-DEMAND',time:digest.time,date:now,slot:'now',items});
+  toast('새 브리프가 발송되었어요');
+}
 
-  card.appendChild(h('label',{},'NAME')); card.appendChild(name);
-  card.appendChild(h('label',{},'EMAIL')); card.appendChild(email);
-  card.appendChild(h('label',{},'PASSWORD')); card.appendChild(pw);
-  card.appendChild(msg);
-  card.appendChild(h('button',{class:'btn', onclick: async ()=>{
-    msg.textContent='';
-    if (pw.value.length < 8) { msg.textContent='비밀번호는 8자 이상'; return; }
-    const { error } = await supabase.auth.signUp({
-      email: email.value.trim(),
-      password: pw.value,
-      options: { data: { name: name.value.trim() }, emailRedirectTo: location.origin }
+function makeDigestCard({region,regionLabel,time,title,items,date,slot,dtl}){
+  const card = el('div',{class:'digest-card'});
+  const sn = sheetNoFor(date, slot);
+  card.appendChild(el('div',{class:'digest-card-bar'},
+    el('span',{class:'dtl'}, `DTL. ${dtl}`),
+    el('span',{}, sn)
+  ));
+  card.appendChild(el('div',{class:'digest-card-head'},
+    el('div',{class:'digest-time'}, `${time} · ${region} · ${regionLabel}`),
+    el('div',{class:'digest-title'}, title)
+  ));
+  if(items.length===0){
+    card.appendChild(el('div',{style:'padding:32px 22px;text-align:center;color:var(--faint);font-size:12.5px'}, '선택하신 분야의 오늘 소식이 없어요.'));
+  }else{
+    const ul = el('ul',{class:'news-list'});
+    items.forEach((it,idx)=>{
+      ul.appendChild(el('li',{class:'news-item', onclick:()=>openMail({region,regionLabel,time,date,slot,items})},
+        el('div',{class:'news-num'}, pad(idx+1)),
+        el('div',{class:'news-content'},
+          el('div',{class:'news-headline'}, it.title),
+          el('div',{class:'news-meta'},
+            el('span',{class:'tag'}, catName(it.cat)),
+            el('span',{class:'dot'}),
+            el('span',{}, it.src)
+          )
+        )
+      ));
     });
-    if (error) msg.textContent = error.message;
-    else { msg.className='ok'; msg.textContent = '인증 메일을 보냈어요. 받은 편지함에서 링크를 클릭하세요.'; }
-  }}, '가입하기'));
+    card.appendChild(ul);
+  }
+  card.appendChild(el('div',{class:'digest-cta'},
+    el('span',{class:'faint mono', style:'font-size:10.5px;letter-spacing:0.06em'}, items.length?`${pad(items.length)} ITEMS`:''),
+    el('button',{class:'open-mail', onclick:()=>openMail({region,regionLabel,time,date,slot,items})}, 'OPEN MAIL  →')
+  ));
+  return card;
+}
 
-  card.appendChild(h('div',{class:'links'},
-    h('span',{class:'muted'},'이미 계정 있음?'),
-    h('a',{onclick:()=>{state.view='login';render();}},'로그인')
+/* ===== Email Modal ===== */
+function openMail({region,regionLabel,time,date,slot,items}){
+  const overlay=$('#modal'); const frame=$('#mailFrame'); frame.innerHTML='';
+  const sn = sheetNoFor(date, slot);
+  frame.appendChild(el('div',{class:'mail-header'},
+    el('div',{class:'mail-from'}, el('strong',{},'ARCHI Brief'), ' <brief@archi.kr>'),
+    el('button',{class:'mail-close', onclick:closeMail, html:'<svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 2L12 12M12 2L2 12" stroke="#0A0A0A" stroke-width="1.5" stroke-linecap="round"/></svg>'})
+  ));
+  const body = el('div',{class:'mail-body'});
+  body.appendChild(el('div',{class:'mail-brand'},
+    el('span',{},'ARCHI · DAILY BRIEF'),
+    el('span',{class:'right'}, sn)
+  ));
+
+  const tb = el('div',{class:'title-block', style:'margin-top:18px'});
+  [
+    ['DATE', fmtDate(date)],
+    ['TIME', time],
+    ['SCOPE', regionLabel],
+    ['NO.', sn]
+  ].forEach(([k,v])=>{
+    tb.appendChild(el('div',{class:'tb-k'},k));
+    tb.appendChild(el('div',{class:'tb-v'},v));
+  });
+  const greeting = el('div',{style:'font-size:13px;color:var(--muted);max-width:60%;line-height:1.6'});
+  greeting.appendChild(document.createTextNode('안녕하세요. 오늘의 '));
+  greeting.appendChild(el('strong',{style:'color:var(--ink);font-weight:600'}, region));
+  greeting.appendChild(document.createTextNode(' 건축 소식 '));
+  greeting.appendChild(el('strong',{style:'color:var(--ink);font-weight:600'}, items.length+'건'));
+  greeting.appendChild(document.createTextNode('을 정리해드립니다.'));
+  body.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:18px 0 22px'},
+    greeting, tb
+  ));
+  items.forEach((it,idx)=>{
+    body.appendChild(el('div',{class:'mail-news'},
+      el('div',{class:'mail-news-num'}, pad(idx+1) + ' / ' + pad(items.length)),
+      el('div',{class:'mail-news-title'}, it.title),
+      el('div',{class:'mail-news-excerpt'}, it.excerpt),
+      el('div',{class:'mail-news-foot'},
+        el('span',{}, `${catName(it.cat)} · ${it.src}`),
+        el('a',{class:'mail-news-link', href:'#'}, 'READ →')
+      )
+    ));
+  });
+  frame.appendChild(body);
+  frame.appendChild(el('div',{class:'mail-footer'},
+    `ARCHI · ${state.user?.email || ''} · 수신 거부는 설정에서`
+  ));
+  overlay.classList.add('show');
+}
+function closeMail(){ $('#modal').classList.remove('show'); }
+
+/* ===== Archive ===== */
+function viewArchive(){
+  const wrap = el('div');
+  const queryState = { q:'', cat:null };
+
+  wrap.appendChild(el('div',{class:'today-head'},
+    el('div',{},
+      el('div',{class:'eyebrow'},
+        el('span',{class:'num'},'02'),
+        el('span',{class:'rule'}),
+        el('span',{class:'label'},'ARCHIVE · 누적')
+      ),
+      el('h2',{class:'h2'}, '지난 브리프 모아보기')
+    ),
+    el('div',{class:'faint mono', style:'font-size:11px;letter-spacing:0.08em'},
+      `TOTAL · ${pad(state.archive.length, 3)}`
+    )
+  ));
+
+  if(state.archive.length===0){
+    wrap.appendChild(el('div',{class:'empty'},
+      el('div',{class:'h3'}, '아직 받은 브리프가 없어요'),
+      el('p',{}, '발송된 메일이 여기에 자동으로 쌓입니다.', el('br',{}),'지금 바로 받아보거나, 디자인 미리보기용 샘플을 채워볼 수 있어요.'),
+      el('div',{class:'actions'},
+        el('button',{class:'btn btn-sm', onclick:sendNow}, '+ 지금 받기'),
+        el('button',{class:'btn btn-sm btn-ghost', onclick:fillSample}, '샘플 14일 채우기')
+      )
+    ));
+    wrap.appendChild(sheetFoot({sheetNo:'A-ARC-00', title:'ARCHIVE'}));
+    return wrap;
+  }
+
+  const tools = el('div',{class:'archive-toolbar'},
+    (function(){
+      const i = el('input',{class:'search-input', type:'search', placeholder:'키워드로 검색 (예: 모듈러, BIM, 공모전...)'});
+      i.addEventListener('input', e=>{ queryState.q = e.target.value.trim().toLowerCase(); renderList(); });
+      return i;
+    })(),
+    el('button',{class:'btn-sm btn-ghost btn', onclick:()=>{
+      if(confirm('아카이브를 전부 비우시겠어요?')){ state.archive=[]; saveState(); render(); toast('아카이브를 비웠어요'); }
+    }}, '비우기')
+  );
+  wrap.appendChild(tools);
+
+  const chips = el('div',{class:'filter-chips'});
+  const allChip = el('button',{class:'chip active', onclick:()=>{
+    queryState.cat=null; chips.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    allChip.classList.add('active'); renderList();
+  }}, '전체');
+  chips.appendChild(allChip);
+  state.user.categories.forEach(cid=>{
+    const c = CATEGORIES.find(x=>x.id===cid); if(!c) return;
+    const ch = el('button',{class:'chip', onclick:()=>{
+      queryState.cat=cid; chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+      ch.classList.add('active'); renderList();
+    }}, c.name);
+    chips.appendChild(ch);
+  });
+  wrap.appendChild(chips);
+
+  const listWrap = el('div'); wrap.appendChild(listWrap);
+
+  function renderList(){
+    listWrap.innerHTML='';
+    const filtered = state.archive.map(d=>{
+      let items = d.items;
+      if(queryState.cat) items = items.filter(it=>it.cat===queryState.cat);
+      if(queryState.q) items = items.filter(it=> (it.title+' '+it.excerpt+' '+it.src).toLowerCase().includes(queryState.q));
+      return {...d, items};
+    }).filter(d=>d.items.length>0);
+
+    if(filtered.length===0){
+      listWrap.appendChild(el('div',{class:'empty'}, el('p',{},'조건에 맞는 브리프가 없어요.')));
+      return;
+    }
+    const monthCounts = {};
+    filtered.forEach(d=>{ const m=fmtMonth(d.date); monthCounts[m]=(monthCounts[m]||0)+1; });
+    let curMonth='';
+    filtered.forEach(d=>{
+      const m = fmtMonth(d.date);
+      if(m!==curMonth){
+        curMonth = m;
+        listWrap.appendChild(el('div',{class:'archive-month'},
+          el('span',{}, m),
+          el('span',{class:'count'}, `${pad(monthCounts[m],2)} ITEMS`)
+        ));
+      }
+      const region = d.region==='kr'?'국내':d.region==='int'?'해외':'온디맨드';
+      const slotClass = d.region==='kr'?'archive-slot kr':d.region==='now'?'archive-slot now':'archive-slot';
+      const slotLabel = d.region==='kr'?'KR':d.region==='int'?'GLOBAL':'NOW';
+      const summary = d.items.slice(0,2).map(x=>x.title).join(' · ') + (d.items.length>2 ? ` 외 ${d.items.length-2}건`:'');
+      const cats = el('div',{class:'archive-cats'});
+      [...new Set(d.items.map(x=>x.cat))].slice(0,3).forEach(cid=>{
+        cats.appendChild(el('span',{class:'tag'}, catName(cid)));
+      });
+      const sn = sheetNoFor(d.date, d.region);
+      listWrap.appendChild(el('div',{class:'archive-row', onclick:()=>openMail({
+        region, regionLabel: slotLabel, time:d.time, date:d.date, slot:d.region, items:d.items
+      })},
+        el('div',{class:'archive-no mono'}, sn),
+        el('div',{class:slotClass}, slotLabel),
+        el('div',{class:'archive-summary'}, summary),
+        cats
+      ));
+    });
+  }
+  renderList();
+  wrap.appendChild(sheetFoot({sheetNo:'A-ARC-' + pad(state.archive.length,3), title:'ARCHIVE'}));
+  return wrap;
+}
+
+function fillSample(){
+  const out = [];
+  const today = new Date(); today.setHours(0,0,0,0);
+  for(let i=0;i<14;i++){
+    const d = new Date(today); d.setDate(d.getDate()-i);
+    const seed = d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+    const krF = categoryFiltered(SAMPLE_KR);
+    const inF = categoryFiltered(SAMPLE_INT);
+    const dKr = new Date(d); dKr.setHours(9,0,0,0);
+    const dIn = new Date(d); dIn.setHours(18,0,0,0);
+    if(krF.length) out.push({date:dKr, region:'kr', time:'09:00', items:pickItems(krF, seed+1), demo:true});
+    if(inF.length) out.push({date:dIn, region:'int', time:'18:00', items:pickItems(inF, seed+2), demo:true});
+  }
+  state.archive = [...out, ...state.archive];
+  saveState(); render();
+  toast(`샘플 ${pad(out.length)}건이 채워졌어요`);
+}
+
+function viewSettings(){
+  const wrap = el('div');
+  wrap.appendChild(el('div',{class:'today-head'},
+    el('div',{},
+      el('div',{class:'eyebrow'},
+        el('span',{class:'num'},'03'),
+        el('span',{class:'rule'}),
+        el('span',{class:'label'},'SETTINGS · 설정')
+      ),
+      el('h2',{class:'h2'}, '구독 설정')
+    )
+  ));
+
+  const sAcc = el('div',{class:'settings-section'});
+  sAcc.appendChild(el('div',{class:'settings-section-head'},
+    el('div',{class:'h3'},'계정'), el('div',{class:'num'},'A · ACCOUNT')
+  ));
+  const sAccB = el('div',{class:'settings-section-body'});
+  sAccB.appendChild(el('div',{class:'settings-row'},
+    el('div',{class:'label-block'},
+      el('div',{class:'settings-label'}, '이메일'),
+      el('div',{class:'settings-desc mono'}, state.user.email)
+    ),
+    el('button',{class:'btn-sm btn-ghost btn', onclick:async ()=>{
+      const v = prompt('새 이메일 주소 (변경 시 확인 메일이 발송됩니다)', state.user.email);
+      if(v && /^\S+@\S+\.\S+$/.test(v)){
+        const { error } = await supabase.auth.updateUser({ email: v });
+        if (error) toast(error.message || '변경 실패');
+        else toast('확인 메일을 보냈어요. 메일에서 확인하세요.');
+      }
+    }}, '변경')
+  ));
+  sAccB.appendChild(el('div',{class:'settings-row'},
+    el('div',{class:'label-block'},
+      el('div',{class:'settings-label'}, '구독 일시정지'),
+      el('div',{class:'settings-desc'}, state.user.paused?'현재 일시정지 중':'메일이 정상적으로 발송됩니다')
+    ),
+    el('div',{class:'toggle' + (state.user.paused?' on':''), onclick:()=>{
+      state.user.paused = !state.user.paused; saveState(); render();
+    }})
+  ));
+  sAcc.appendChild(sAccB); wrap.appendChild(sAcc);
+
+  const sTime = el('div',{class:'settings-section'});
+  sTime.appendChild(el('div',{class:'settings-section-head'},
+    el('div',{class:'h3'},'발송 시간'), el('div',{class:'num'},'B · SCHEDULE')
+  ));
+  const sTimeB = el('div',{class:'settings-section-body'});
+  function timeRow(label, desc, key){
+    const inp = el('input',{class:'time-input', type:'time', value:state.user.times[key]});
+    inp.addEventListener('change', e=>{
+      const v = e.target.value;
+      if(/^\d{2}:\d{2}$/.test(v)){
+        state.user.times[key]=v; saveState();
+        toast(`${label} ${v}로 설정되었어요`);
+      }
+    });
+    return el('div',{class:'settings-row'},
+      el('div',{class:'label-block'},
+        el('div',{class:'settings-label'}, label),
+        el('div',{class:'settings-desc'}, desc)
+      ),
+      inp
+    );
+  }
+  sTimeB.appendChild(timeRow('오전 — 국내 소식','국내 매거진·정부 자료 큐레이션','morning'));
+  sTimeB.appendChild(timeRow('오후 — 해외 소식','ArchDaily, Dezeen 등 해외 매거진','evening'));
+  sTime.appendChild(sTimeB); wrap.appendChild(sTime);
+
+  const sCat = el('div',{class:'settings-section'});
+  sCat.appendChild(el('div',{class:'settings-section-head'},
+    el('div',{class:'h3'},'구독 분야'),
+    el('div',{class:'num'},`C · ${pad(state.user.categories.length)} / ${pad(CATEGORIES.length)}`)
+  ));
+  const sCatB = el('div',{class:'settings-section-body'});
+  CATEGORIES.forEach((c,i)=>{
+    const on = state.user.categories.includes(c.id);
+    sCatB.appendChild(el('div',{class:'settings-row'},
+      el('div',{class:'label-block', style:'display:flex;align-items:center;gap:14px'},
+        el('span',{class:'mono', style:'font-size:10.5px;color:var(--faint);letter-spacing:0.04em'}, pad(i+1)),
+        el('div',{},
+          el('div',{class:'settings-label'}, c.name),
+          el('div',{class:'settings-desc'}, c.desc)
+        )
+      ),
+      el('div',{class:'toggle' + (on?' on':''), onclick:()=>{
+        if(state.user.categories.includes(c.id)) state.user.categories = state.user.categories.filter(x=>x!==c.id);
+        else state.user.categories = [...state.user.categories, c.id];
+        saveState(); render();
+      }})
+    ));
+  });
+  sCat.appendChild(sCatB); wrap.appendChild(sCat);
+
+  const sD = el('div',{class:'settings-section'});
+  sD.appendChild(el('div',{class:'settings-section-head'},
+    el('div',{class:'h3'},'계정 관리'), el('div',{class:'num'},'D · DANGER')
+  ));
+  const sDB = el('div',{class:'settings-section-body'});
+  sDB.appendChild(el('div',{class:'settings-row'},
+    el('div',{class:'label-block'},
+      el('div',{class:'settings-label'}, '로그아웃'),
+      el('div',{class:'settings-desc'}, '계정에서 로그아웃합니다 (데이터는 보존)')
+    ),
+    el('button',{class:'btn-sm btn-ghost btn', onclick:logout}, '로그아웃')
+  ));
+  sDB.appendChild(el('div',{class:'settings-row'},
+    el('div',{class:'label-block'},
+      el('div',{class:'settings-label'}, '구독 해지'),
+      el('div',{class:'settings-desc'}, '모든 구독 정보와 아카이브가 삭제됩니다')
+    ),
+    el('button',{class:'btn-sm btn-ghost btn', onclick:async ()=>{
+      if(confirm('정말 구독을 해지하시겠어요? 프로필과 아카이브가 삭제되고 로그아웃됩니다.')){
+        if (state.user) await supabase.from('profiles').delete().eq('id', state.user.id);
+        await supabase.auth.signOut();
+        state.user = null; state.profile = null; state.archive = []; state.view = 'login';
+        render(); toast('구독이 해지되었어요');
+      }
+    }}, '해지하기')
+  ));
+  sD.appendChild(sDB); wrap.appendChild(sD);
+
+  wrap.appendChild(sheetFoot({sheetNo:'A-SET-00', title:'SETTINGS'}));
+  return wrap;
+}
+
+document.querySelectorAll('.nav button, .bottom-nav button').forEach(b=>{
+  b.addEventListener('click', ()=>nav(b.dataset.view));
+});
+$('#modal').addEventListener('click', e=>{ if(e.target.id==='modal') closeMail(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMail(); });
+
+// Initial render (empty until Supabase hydrates)
+render();
+
+// React to Supabase auth changes (initial session, login, logout, token refresh)
+supabase.auth.onAuthStateChange((event, session) => {
+  hydrateFromSupabase();
+});
+
+/* ===== Auth Views ===== */
+function viewLogin(){
+  const wrap = el('div',{class:'auth-wrap'});
+  const card = el('div',{class:'auth-card'});
+  card.appendChild(el('div',{class:'auth-brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(el('div',{class:'auth-title'},'로그인'));
+  card.appendChild(el('div',{class:'auth-sub'},'가입한 이메일과 비밀번호를 입력하세요.'));
+
+  const emailIn = el('input',{type:'email',required:'',autocomplete:'email',placeholder:'you@example.com'});
+  const pwIn = el('input',{type:'password',required:'',autocomplete:'current-password',placeholder:'••••••••'});
+
+  const form = el('form',{onsubmit:async (e)=>{
+    e.preventDefault();
+    const email = emailIn.value.trim().toLowerCase();
+    const pw = pwIn.value;
+    const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+    if (error) { toast(error.message || '로그인 실패'); return; }
+    toast('로그인 중...');
+  }});
+  form.appendChild(el('div',{class:'field'}, el('label',{},'EMAIL'), emailIn));
+  form.appendChild(el('div',{class:'field'}, el('label',{},'PASSWORD'), pwIn));
+  form.appendChild(el('div',{class:'auth-cta'},
+    el('button',{class:'btn',type:'submit'},'로그인  →')
+  ));
+  card.appendChild(form);
+
+  card.appendChild(el('div',{class:'auth-links'},
+    el('a',{onclick:()=>{ state.view='signup'; render(); }},'회원가입'),
+    el('div',{style:'display:flex;gap:14px'},
+      el('a',{onclick:()=>toast('Stage 4 백엔드 단계에서 추가됩니다')},'아이디 찾기'),
+      el('a',{onclick:()=>toast('Stage 4 백엔드 단계에서 추가됩니다')},'비밀번호 찾기')
+    )
   ));
   wrap.appendChild(card);
   return wrap;
 }
 
-function viewCats() {
-  const wrap = h('div',{class:'wrap'});
-  const card = h('div',{class:'card'});
-  card.appendChild(h('div',{class:'brand'},'ARCHI · DAILY BRIEF'));
-  card.appendChild(h('h2',{},`환영합니다, ${state.profile?.name || ''}님`));
-  card.appendChild(h('div',{class:'sub'},'관심 분야를 골라주세요. 설정에서 언제든 변경할 수 있어요.'));
+function viewSignup(){
+  const wrap = el('div',{class:'auth-wrap'});
+  const card = el('div',{class:'auth-card'});
+  card.appendChild(el('div',{class:'auth-brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(el('div',{class:'auth-title'},'회원가입'));
+  card.appendChild(el('div',{class:'auth-sub'},'이메일과 비밀번호로 계정을 만듭니다.'));
 
-  const sel = new Set(state.profile?.categories || []);
-  const grid = h('div',{class:'cat-grid'});
-  CATEGORIES.forEach(c => {
-    const item = h('div',{class:'cat'+(sel.has(c.id)?' on':''), onclick: ()=>{
-      if (sel.has(c.id)) { sel.delete(c.id); item.classList.remove('on'); }
-      else { sel.add(c.id); item.classList.add('on'); }
+  const nameIn = el('input',{type:'text',required:'',placeholder:'이름 또는 닉네임',maxlength:'30'});
+  const emailIn = el('input',{type:'email',required:'',autocomplete:'email',placeholder:'you@example.com'});
+  const pwIn = el('input',{type:'password',required:'',autocomplete:'new-password',placeholder:'8자 이상',minlength:'8'});
+  const pwIn2 = el('input',{type:'password',required:'',autocomplete:'new-password',placeholder:'비밀번호 확인',minlength:'8'});
+
+  const form = el('form',{onsubmit:async (e)=>{
+    e.preventDefault();
+    const name = nameIn.value.trim();
+    const email = emailIn.value.trim().toLowerCase();
+    const pw = pwIn.value;
+    const pw2 = pwIn2.value;
+    if(name.length<1){ toast('이름을 입력해주세요'); return; }
+    if(!/^\S+@\S+\.\S+$/.test(email)){ toast('이메일 형식을 확인해주세요'); return; }
+    if(pw.length<8){ toast('비밀번호는 8자 이상'); return; }
+    if(pw !== pw2){ toast('비밀번호가 일치하지 않아요'); return; }
+    const { error } = await supabase.auth.signUp({
+      email, password: pw,
+      options: { data: { name }, emailRedirectTo: location.origin }
+    });
+    if (error) { toast(error.message || '가입 실패'); return; }
+    toast('인증 메일을 보냈어요. 메일함의 링크를 클릭하세요.');
+  }});
+
+  form.appendChild(el('div',{class:'field'}, el('label',{},'NAME'), nameIn));
+  form.appendChild(el('div',{class:'field'}, el('label',{},'EMAIL'), emailIn));
+  form.appendChild(el('div',{class:'field'}, el('label',{},'PASSWORD'), pwIn));
+  form.appendChild(el('div',{class:'field'}, el('label',{},'CONFIRM'), pwIn2));
+  form.appendChild(el('div',{class:'auth-cta'},
+    el('button',{class:'btn',type:'submit'},'인증 코드 받기  →')
+  ));
+  card.appendChild(form);
+
+  card.appendChild(el('div',{class:'auth-links'},
+    el('span',{class:'faint'},'이미 계정이 있나요?'),
+    el('a',{onclick:()=>{ state.view='login'; render(); }},'로그인')
+  ));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+function viewVerify(){
+  const wrap = el('div',{class:'auth-wrap'});
+  const card = el('div',{class:'auth-card'});
+  const pv = state.pendingVerification;
+  card.appendChild(el('div',{class:'auth-brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(el('div',{class:'auth-title'},'이메일 인증'));
+  card.appendChild(el('div',{class:'auth-sub'},
+    (pv && pv.email ? pv.email : '') + ' 으로 보낸 6자리 인증 코드를 입력하세요.'
+  ));
+
+  const codeIn = el('input',{class:'code-input',type:'text',inputmode:'numeric',maxlength:'6',placeholder:'••••••',autocomplete:'one-time-code'});
+  setTimeout(()=>codeIn.focus(),50);
+
+  const form = el('form',{onsubmit:e=>{
+    e.preventDefault();
+    const code = codeIn.value.trim();
+    const pv = state.pendingVerification;
+    if(!pv){ toast('인증 정보가 만료됐어요'); state.view='login'; render(); return; }
+    if(code !== pv.code){ toast('인증 코드가 올바르지 않아요'); return; }
+    state.accounts[pv.email] = {
+      name: pv.name, password: pv.password,
+      categories: [], times: {morning:'09:00', evening:'18:00'},
+      paused: false, since: new Date().toISOString(),
+      verified: true, archive: [],
+    };
+    state.session = pv.email;
+    state.user = {email:pv.email, name:pv.name, categories:[], times:{morning:'09:00',evening:'18:00'}, paused:false, since:state.accounts[pv.email].since};
+    state.archive = [];
+    state.pendingVerification = null;
+    state.view = 'select-cats';
+    saveState(); render(); toast('인증 완료 — 환영해요');
+  }});
+  form.appendChild(el('div',{class:'field'},
+    el('label',{},'VERIFICATION CODE'),
+    codeIn
+  ));
+  form.appendChild(el('div',{class:'auth-cta'},
+    el('button',{class:'btn',type:'submit'},'인증 완료')
+  ));
+  card.appendChild(form);
+
+  card.appendChild(el('div',{class:'auth-note'},
+    '[DEMO] 백엔드가 없어서 실제 메일은 발송되지 않아요.',el('br',{}),
+    '인증 코드는 아래에 표시됩니다 (Stage 5 백엔드에서 진짜 메일로 발송):',
+    el('span',{class:'code'}, pv && pv.code ? pv.code : '------')
+  ));
+
+  card.appendChild(el('div',{class:'auth-links'},
+    el('a',{onclick:()=>{ state.view='signup'; state.pendingVerification=null; render(); }},'← 가입으로 돌아가기'),
+    el('a',{onclick:()=>{
+      if(state.pendingVerification){
+        state.pendingVerification.code = String(Math.floor(100000+Math.random()*900000));
+        render(); toast('새 인증 코드가 발급됐어요');
+      }
+    }},'코드 재발급')
+  ));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+function viewSelectCats(){
+  const wrap = el('div');
+  const selected = new Set(state.user.categories || []);
+  const countEl = el('div',{class:'faint mono', style:'font-size:11px;letter-spacing:0.08em'},`SELECTED · ${pad(selected.size)} / ${pad(CATEGORIES.length)}`);
+
+  wrap.appendChild(el('div',{class:'onboard-hero'},
+    el('div',{class:'eyebrow'},
+      el('span',{class:'num'},'00'),
+      el('span',{class:'rule'}),
+      el('span',{class:'label'},'WELCOME · 분야 선택')
+    ),
+    el('h1',{class:'h1'},
+      `환영합니다, ${state.user.name || ''}님.`, el('br',{}),
+      '관심 분야를 골라주세요.'
+    ),
+    el('p',{class:'p-lead'},'선택한 분야의 소식만 큐레이션해서 보내드립니다. 설정에서 언제든 변경할 수 있어요.')
+  ));
+
+  const grid = el('div',{class:'cat-grid'});
+  CATEGORIES.forEach((c,i)=>{
+    const item = el('div',{class:'cat-item' + (selected.has(c.id)?' checked':''), onclick:()=>{
+      if(selected.has(c.id)){ selected.delete(c.id); item.classList.remove('checked'); }
+      else { selected.add(c.id); item.classList.add('checked'); }
+      countEl.textContent = `SELECTED · ${pad(selected.size)} / ${pad(CATEGORIES.length)}`;
     }},
-      h('div',{class:'box'},'✓'),
-      h('div',{},c.name)
+      el('div',{class:'cat-num'}, pad(i+1)),
+      el('div',{class:'checkbox', html:'<svg width="10" height="10" viewBox="0 0 11 11" fill="none"><path d="M2 5.5L4.5 8L9 2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'}),
+      el('div',{},
+        el('div',{class:'cat-name'}, c.name),
+        el('div',{class:'cat-desc'}, c.desc)
+      )
     );
     grid.appendChild(item);
   });
-  card.appendChild(grid);
-  const msg = h('div',{class:'err'});
-  card.appendChild(msg);
-  card.appendChild(h('button',{class:'btn', onclick: async ()=>{
-    if (sel.size === 0) { msg.textContent='1개 이상 선택'; return; }
-    const { error } = await supabase.from('profiles').update({ categories: [...sel] }).eq('id', state.user.id);
-    if (error) msg.textContent = error.message;
-    else refresh();
-  }}, '시작하기'));
-  wrap.appendChild(card);
+  wrap.appendChild(grid);
+
+  wrap.appendChild(el('div',{style:'margin-top:28px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap'},
+    countEl,
+    el('button',{class:'btn', onclick:async ()=>{
+      if(selected.size===0){ toast('1개 이상 선택해주세요'); return; }
+      state.user.categories = [...selected];
+      await saveState();
+      state.view = 'home'; render();
+      toast('설정 완료 — 내일 아침 첫 메일이 도착합니다');
+    }}, '시작하기  →')
+  ));
+
+  wrap.appendChild(sheetFoot({sheetNo:'A-000-WC', title:'WELCOME'}));
   return wrap;
 }
 
-function viewMain() {
-  const wrap = h('div',{});
-  wrap.appendChild(h('div',{class:'topbar'},
-    h('div',{class:'brand-min'},'ARCHI'),
-    h('button',{class:'btn ghost', onclick: async ()=>{ await supabase.auth.signOut(); refresh(); }},'로그아웃')
-  ));
-  const main = h('div',{class:'main'});
-
-  // Account section
-  const acc = h('div',{class:'section'},
-    h('h3',{},'계정'),
-    h('p',{class:'note mono'}, state.user.email)
-  );
-  main.appendChild(acc);
-
-  // Categories
-  const sel = new Set(state.profile.categories || []);
-  const catSec = h('div',{class:'section'},
-    h('h3',{},'구독 분야')
-  );
-  const grid = h('div',{class:'cat-grid'});
-  CATEGORIES.forEach(c => {
-    const item = h('div',{class:'cat'+(sel.has(c.id)?' on':''), onclick: async ()=>{
-      if (sel.has(c.id)) sel.delete(c.id); else sel.add(c.id);
-      item.classList.toggle('on');
-      await supabase.from('profiles').update({ categories: [...sel] }).eq('id', state.user.id);
-    }}, h('div',{class:'box'},'✓'), h('div',{},c.name));
-    grid.appendChild(item);
-  });
-  catSec.appendChild(grid);
-  main.appendChild(catSec);
-
-  // Times
-  const t1 = h('input',{type:'time', value: state.profile.send_morning?.slice(0,5) || '09:00'});
-  const t2 = h('input',{type:'time', value: state.profile.send_evening?.slice(0,5) || '18:00'});
-  t1.addEventListener('change', async () => {
-    await supabase.from('profiles').update({ send_morning: t1.value+':00' }).eq('id', state.user.id);
-  });
-  t2.addEventListener('change', async () => {
-    await supabase.from('profiles').update({ send_evening: t2.value+':00' }).eq('id', state.user.id);
-  });
-  main.appendChild(h('div',{class:'section'},
-    h('h3',{},'발송 시간 (참고용 — 실제 크론은 Vercel 설정 시간 사용)'),
-    h('div',{class:'row'},
-      h('div',{},h('div',{class:'lbl'},'오전 — 국내'),h('div',{class:'desc'},'기본 09:00')),
-      t1
-    ),
-    h('div',{class:'row'},
-      h('div',{},h('div',{class:'lbl'},'오후 — 해외'),h('div',{class:'desc'},'기본 18:00')),
-      t2
-    )
-  ));
-
-  // Pause toggle
-  const tog = h('div',{class:'toggle'+(state.profile.paused?' on':'')});
-  tog.addEventListener('click', async () => {
-    const newVal = !state.profile.paused;
-    state.profile.paused = newVal;
-    tog.classList.toggle('on');
-    await supabase.from('profiles').update({ paused: newVal }).eq('id', state.user.id);
-  });
-  main.appendChild(h('div',{class:'section'},
-    h('div',{class:'row'},
-      h('div',{},h('div',{class:'lbl'},'구독 일시정지'),h('div',{class:'desc'},'켜면 메일 발송이 멈춥니다')),
-      tog
-    )
-  ));
-
-  wrap.appendChild(main);
-  return wrap;
+async function logout(){
+  await supabase.auth.signOut();
+  state.user = null; state.profile = null; state.archive = []; state.view = 'login';
+  render(); toast('로그아웃되었어요');
 }
 
-refresh();
 </script>
 </body>
 </html>
