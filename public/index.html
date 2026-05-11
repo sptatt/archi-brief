@@ -650,7 +650,6 @@ async function hydrateFromSupabase(){
     time: new Date(d.sent_at).toTimeString().slice(0,5),
     items: d.items || [],
   }));
-  // Latest news for home view
   const { data: krNews } = await supabase.from('news_items').select('*').eq('region','kr').order('published_at',{ascending:false}).limit(80);
   const { data: intNews } = await supabase.from('news_items').select('*').eq('region','int').order('published_at',{ascending:false}).limit(80);
   state.todayKr = krNews || [];
@@ -1029,7 +1028,7 @@ function viewArchive(){
     listWrap.innerHTML='';
     const filtered = state.archive.map(d=>{
       let items = d.items;
-      if(queryState.cat) items = items.filter(it=>it.cat===queryState.cat);
+      if(queryState.cat) items = items.filter(it=>itemCat(it)===queryState.cat);
       if(queryState.q) items = items.filter(it=> (it.title+' '+it.excerpt+' '+it.src).toLowerCase().includes(queryState.q));
       return {...d, items};
     }).filter(d=>d.items.length>0);
@@ -1055,7 +1054,7 @@ function viewArchive(){
       const slotLabel = d.region==='kr'?'KR':d.region==='int'?'GLOBAL':'NOW';
       const summary = d.items.slice(0,2).map(x=>x.title).join(' · ') + (d.items.length>2 ? ` 외 ${d.items.length-2}건`:'');
       const cats = el('div',{class:'archive-cats'});
-      [...new Set(d.items.map(x=>x.cat))].slice(0,3).forEach(cid=>{
+      [...new Set(d.items.map(x=>itemCat(x)))].slice(0,3).forEach(cid=>{
         cats.appendChild(el('span',{class:'tag'}, catName(cid)));
       });
       const sn = sheetNoFor(d.date, d.region);
