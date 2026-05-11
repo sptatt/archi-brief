@@ -219,6 +219,17 @@
     background:#fff;transition:background .12s;border-left:1px solid var(--hair);
   }
   .now-bar .now-cta:hover{background:#FCFAF5}
+  .now-bar .now-opts{
+    display:flex;gap:6px;padding:12px 16px;align-items:center;border-left:1px solid var(--hair);
+  }
+  .now-btn{
+    padding:8px 14px;border:1px solid var(--hair);border-radius:4px;background:#fff;
+    font-size:12px;font-weight:600;cursor:pointer;color:var(--ink);font-family:inherit;
+    transition:all .12s;letter-spacing:-0.005em;
+  }
+  .now-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .now-btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .now-btn.primary:hover{opacity:0.85}
   .now-bar .now-cta .arrow{
     width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;
     display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1;
@@ -475,6 +486,7 @@
     .bottom-nav{display:grid}
     .now-bar{grid-template-columns:auto 1fr}
     .now-bar .now-cta{grid-column:1/-1;border-left:none;border-top:1px dashed var(--hair);justify-content:center;padding:14px}
+    .now-bar .now-opts{grid-column:1/-1;border-left:none;border-top:1px dashed var(--hair);justify-content:center;padding:14px}
     .now-bar .now-mid{border-right:none}
     .sheet-foot{grid-template-columns:1fr}
     .north{display:none}
@@ -838,31 +850,34 @@ function makeNowBar(){
     el('div',{class:'now-tag'}, 'ON-DEMAND'),
     el('div',{class:'now-mid'},
       el('div',{class:'lead'}, '지금 바로 받기'),
-      el('div',{class:'sub'}, '예약 시간과 별도로, 즉시 5건의 새 브리프를 받습니다.')
+      el('div',{class:'sub'}, '국내·해외 혼합 또는 한쪽만 선택해서 즉시 5건 발송')
     ),
-    el('div',{class:'now-cta', onclick:sendNow},
-      el('div',{class:'arrow'}, '+'),
-      el('div',{class:'label'}, '지금 받기')
+    el('div',{class:'now-opts'},
+      el('button',{class:'now-btn primary', onclick:()=>sendNow('mix')}, '혼합'),
+      el('button',{class:'now-btn', onclick:()=>sendNow('kr')}, '국내'),
+      el('button',{class:'now-btn', onclick:()=>sendNow('int')}, '해외')
     )
   );
 }
 
-async function sendNow(){
+async function sendNow(slot){
+  slot = slot || 'mix';
   if (!state.user) { toast('로그인이 필요합니다'); return; }
   if ((state.user.categories||[]).length === 0) { toast('구독 분야를 1개 이상 선택해주세요'); return; }
   toast('발송 중...');
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { toast('세션 만료. 다시 로그인'); return; }
-    const r = await fetch('/api/digest-now', {
+    const r = await fetch('/api/digest-now?slot=' + slot, {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + session.access_token }
     });
     const j = await r.json();
     if (j.ok && j.sent > 0) {
-      toast('메일이 발송됐어요. 받은편지함 확인.');
+      const tag = (j.kr !== undefined) ? ` (국내 ${j.kr}, 해외 ${j.int})` : '';
+      toast('메일 발송됐어요' + tag);
       await hydrateFromSupabase();
-    } else if (j.ok && j.sent === 0) toast('아직 선택 분야의 새 기사가 없어요');
+    } else if (j.ok && j.sent === 0) toast('해당 분야의 새 기사가 없어요');
     else toast(j.error || '발송 실패');
   } catch (e) { toast('발송 실패: ' + e.message); }
 }
