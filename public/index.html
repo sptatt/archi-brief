@@ -1526,97 +1526,39 @@ function viewFindId(){
 
 function viewFindPw(){
   const wrap = el('div',{class:'auth-wrap'});
-  let phase = 'email';
-  let savedEmail = '';
+  const card = el('div',{class:'auth-card'});
+  card.appendChild(el('div',{class:'auth-brand'},'ARCHI · DAILY BRIEF'));
+  card.appendChild(el('div',{class:'auth-title'},'비밀번호 찾기'));
+  card.appendChild(el('div',{class:'auth-sub'},'가입한 이메일로 비밀번호 재설정 링크를 보내드립니다.'));
 
-  function build() {
-    wrap.innerHTML = '';
-    const card = el('div',{class:'auth-card'});
-    card.appendChild(el('div',{class:'auth-brand'},'ARCHI · DAILY BRIEF'));
-    card.appendChild(el('div',{class:'auth-title'},'비밀번호 찾기'));
+  const emailIn = el('input',{type:'email',required:'',autocomplete:'email',placeholder:'you@example.com'});
+  const note = el('div',{class:'auth-note', style:'display:none;margin-top:14px'});
 
-    if (phase === 'email') {
-      card.appendChild(el('div',{class:'auth-sub'},'가입한 이메일로 인증 코드를 보내드립니다.'));
-      const emailIn = el('input',{type:'email',required:'',autocomplete:'email',placeholder:'you@example.com'});
+  const form = el('form',{onsubmit:async (e)=>{
+    e.preventDefault();
+    const email = emailIn.value.trim().toLowerCase();
+    if (!/^\S+@\S+\.\S+$/.test(email)) { toast('이메일 형식 확인'); return; }
+    toast('전송 중...');
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: location.origin + '/?recovery=1'
+    });
+    if (error) { toast(error.message || '전송 실패'); return; }
+    note.style.display = 'block';
+    note.innerHTML = '<strong>' + email + '</strong> 로 재설정 링크를 보냈어요.<br>메일을 확인하고 <strong>링크를 클릭</strong>하면 새 비밀번호 입력 화면이 자동으로 떠요.<br><br>(코드 입력은 필요 없습니다 — 그냥 링크만 클릭)';
+  }});
 
-      const form = el('form',{onsubmit:async (e)=>{
-        e.preventDefault();
-        const email = emailIn.value.trim().toLowerCase();
-        if (!/^\S+@\S+\.\S+$/.test(email)) { toast('이메일 형식 확인'); return; }
-        toast('전송 중...');
-        const { error } = await supabase.auth.resetPasswordForEmail(email);
-        if (error) { toast(error.message || '전송 실패'); return; }
-        savedEmail = email;
-        phase = 'code';
-        build();
-        toast('인증 코드를 메일로 보냈어요');
-      }});
+  form.appendChild(el('div',{class:'field'}, el('label',{},'EMAIL'), emailIn));
+  form.appendChild(el('div',{class:'auth-cta'},
+    el('button',{class:'btn',type:'submit'},'재설정 메일 보내기')
+  ));
+  card.appendChild(form);
+  card.appendChild(note);
 
-      form.appendChild(el('div',{class:'field'}, el('label',{},'EMAIL'), emailIn));
-      form.appendChild(el('div',{class:'auth-cta'},
-        el('button',{class:'btn',type:'submit'},'코드 받기')
-      ));
-      card.appendChild(form);
-
-      card.appendChild(el('div',{class:'auth-links'},
-        el('a',{onclick:()=>{ state.view='login'; render(); }},'← 로그인'),
-        el('a',{onclick:()=>{ state.view='find-id'; render(); }},'아이디 찾기')
-      ));
-    } else {
-      card.appendChild(el('div',{class:'auth-sub'},
-        savedEmail + ' 로 받은 코드와 새 비밀번호를 입력하세요.'
-      ));
-
-      const codeIn = el('input',{class:'code-input',type:'text',inputmode:'numeric',maxlength:'8',placeholder:'••••••',autocomplete:'one-time-code'});
-      const pw1 = el('input',{type:'password',required:'',autocomplete:'new-password',placeholder:'새 비밀번호 (8자 이상)',minlength:'8'});
-      const pw2 = el('input',{type:'password',required:'',autocomplete:'new-password',placeholder:'비밀번호 확인',minlength:'8'});
-
-      const form = el('form',{onsubmit:async (e)=>{
-        e.preventDefault();
-        const code = codeIn.value.trim();
-        if (code.length < 4) { toast('인증 코드를 입력하세요'); return; }
-        if (pw1.value.length < 8) { toast('비밀번호 8자 이상'); return; }
-        if (pw1.value !== pw2.value) { toast('비밀번호가 일치하지 않아요'); return; }
-
-        toast('인증 중...');
-        const { error: vErr } = await supabase.auth.verifyOtp({
-          email: savedEmail, token: code, type: 'recovery'
-        });
-        if (vErr) { toast('코드 오류: ' + vErr.message); return; }
-
-        const { error: uErr } = await supabase.auth.updateUser({ password: pw1.value });
-        if (uErr) { toast('재설정 실패: ' + uErr.message); return; }
-
-        toast('비밀번호가 변경됐어요');
-        state.recovering = false;
-        state.view = 'home';
-        await hydrateFromSupabase();
-      }});
-
-      form.appendChild(el('div',{class:'field'}, el('label',{},'CODE (메일에 온 코드)'), codeIn));
-      form.appendChild(el('div',{class:'field'}, el('label',{},'NEW PASSWORD'), pw1));
-      form.appendChild(el('div',{class:'field'}, el('label',{},'CONFIRM'), pw2));
-      form.appendChild(el('div',{class:'auth-cta'},
-        el('button',{class:'btn',type:'submit'},'비밀번호 변경')
-      ));
-      card.appendChild(form);
-
-      card.appendChild(el('div',{class:'auth-links'},
-        el('a',{onclick:()=>{ phase='email'; build(); }},'← 다시 시도'),
-        el('a',{onclick:async ()=>{
-          if (savedEmail) {
-            const { error } = await supabase.auth.resetPasswordForEmail(savedEmail);
-            if (error) toast(error.message);
-            else toast('새 코드 발송됨');
-          }
-        }},'코드 재발송')
-      ));
-    }
-
-    wrap.appendChild(card);
-  }
-
-  build();
+  card.appendChild(el('div',{class:'auth-links'},
+    el('a',{onclick:()=>{ state.view='login'; render(); }},'← 로그인'),
+    el('a',{onclick:()=>{ state.view='find-id'; render(); }},'아이디 찾기')
+  ));
+  wrap.appendChild(card);
   return wrap;
 }
 
